@@ -1,0 +1,14 @@
+
+      {
+        "chainId": 7863,
+        "rpcUrl": "https://node-testnet.maalscan.io/",
+        "bridgeAddress": "0x8Cb0990141604a81997459a38DFE8f754965aFB6",
+        "tokenBridgeAddress": "0x1A3EA2fBab2081F2095A927898aa29f8b030fD75",
+        "remoteChainId": 97
+      },{
+        "chainId": 11155111,
+        "rpcUrl": "https://ethereum-sepolia-rpc.publicnode.com/",
+        "bridgeAddress": "0x218b64A61a9B366d0FAd9208F33972c8BBb39f30",
+        "tokenBridgeAddress": "0x874f37F9a1c7d6b47f89Dd250dd2897c9a7f86F4",
+        "remoteChainId": 97
+      }

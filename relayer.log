@@ -1,0 +1,436 @@
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-10T11:21:06.931Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-10T11:21:06.936Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-10T11:21:06.937Z"}
+{"level":"info","message":"Setting up event listener for chain 7863","timestamp":"2025-05-10T11:21:06.937Z"}
+{"level":"info","message":"Event listener active for chain 7863","timestamp":"2025-05-10T11:21:06.938Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-10T11:21:06.939Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-10T11:21:06.940Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-10T11:39:58.439Z"}
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-10T11:40:06.279Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-10T11:40:06.285Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-10T11:40:06.285Z"}
+{"level":"info","message":"Setting up event listener for chain 7863","timestamp":"2025-05-10T11:40:06.286Z"}
+{"level":"info","message":"Event listener active for chain 7863","timestamp":"2025-05-10T11:40:06.287Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-10T11:40:06.287Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-10T11:40:06.288Z"}
+{"level":"info","message":"Detected MessageSent on chain 97: messageId=0x991faa9e512f78831c4a38b2e8ad10ccf35fb397293fb30cbbf3d9cef41b5a36, sender=0x874f37F9a1c7d6b47f89Dd250dd2897c9a7f86F4, target=0x1A3EA2fBab2081F2095A927898aa29f8b030fD75, nonce=3","timestamp":"2025-05-10T11:40:33.052Z"}
+{"level":"info","message":"Relaying message 0x991faa9e512f78831c4a38b2e8ad10ccf35fb397293fb30cbbf3d9cef41b5a36 to chain 7863","timestamp":"2025-05-10T11:40:33.465Z"}
+{"level":"info","message":"Transaction sent: 0xaab09ac1c835f1ddea49c12dc5e6560e77c1cc488313345ee11fd779de59971a","timestamp":"2025-05-10T11:40:35.766Z"}
+{"level":"error","message":"Error processing MessageSent for messageId 0x991faa9e512f78831c4a38b2e8ad10ccf35fb397293fb30cbbf3d9cef41b5a36: transaction execution reverted (action=\"sendTransaction\", data=null, reason=null, invocation=null, revert=null, transaction={ \"data\": \"\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0x8Cb0990141604a81997459a38DFE8f754965aFB6\" }, receipt={ \"_type\": \"TransactionReceipt\", \"blobGasPrice\": null, \"blobGasUsed\": null, \"blockHash\": \"0xbabe789169072a8d8ed0a5aabca44143fd4d6ed606c9ae36cb25d7426778a2a8\", \"blockNumber\": 3770818, \"contractAddress\": null, \"cumulativeGasUsed\": \"250000\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"gasPrice\": \"7\", \"gasUsed\": \"250000\", \"hash\": \"0xaab09ac1c835f1ddea49c12dc5e6560e77c1cc488313345ee11fd779de59971a\", \"index\": 0, \"logs\": [  ], \"logsBloom\": \"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\", \"root\": null, \"status\": 0, \"to\": \"0x8Cb0990141604a81997459a38DFE8f754965aFB6\" }, code=CALL_EXCEPTION, version=6.14.0)","timestamp":"2025-05-10T11:40:45.001Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-10T11:44:05.289Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-10T11:59:40.752Z"}
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-10T11:59:43.459Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-10T11:59:45.746Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-10T12:01:42.595Z"}
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-10T12:01:46.093Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-10T12:01:48.715Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-10T12:07:55.610Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-10T12:07:55.613Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-10T12:07:55.613Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-10T12:07:55.613Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-10T12:07:55.613Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-10T12:08:40.629Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-10T12:08:40.632Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-10T12:08:40.632Z"}
+{"level":"info","message":"Initializing chain 7863...","timestamp":"2025-05-10T12:08:40.633Z"}
+{"level":"info","message":"Connected to RPC for chain 7863: https://node-testnet.maalscan.io/","timestamp":"2025-05-10T12:08:41.725Z"}
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-10T12:08:45.223Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-10T12:08:45.223Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-10T12:08:46.568Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-10T12:08:48.118Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-10T12:08:48.118Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-10T12:08:48.119Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-10T12:08:48.119Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-10T12:08:48.120Z"}
+{"level":"info","message":"Processing chain 7863 for event listener setup","timestamp":"2025-05-10T12:08:48.120Z"}
+{"level":"info","message":"Setting up event listener for chain 7863","timestamp":"2025-05-10T12:08:48.120Z"}
+{"level":"info","message":"Event listener active for chain 7863","timestamp":"2025-05-10T12:08:48.121Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-10T12:08:48.121Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-10T12:08:48.121Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-10T12:08:48.122Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-10T12:08:48.122Z"}
+{"level":"info","message":"Detected MessageSent on chain 97: messageId=0x2339d286c10b589170545837504009539daeee128eb12c40003b766898edd1b9, sender=0x874f37F9a1c7d6b47f89Dd250dd2897c9a7f86F4, target=0x1A3EA2fBab2081F2095A927898aa29f8b030fD75, nonce=4, data=0x02e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000004","timestamp":"2025-05-10T12:10:38.126Z"}
+{"level":"error","message":"Failed to estimate gas for message 0x2339d286c10b589170545837504009539daeee128eb12c40003b766898edd1b9 on chain 7863: execution reverted (unknown custom error) (action=\"estimateGas\", data=\"0xacfdb444\", reason=null, transaction={ \"data\": \"0x412df7562339d286c10b589170545837504009539daeee128eb12c40003b766898edd1b9000000000000000000000000218b64a61a9b366d0fad9208f33972c8bbb39f300000000000000000000000001a3ea2fbab2081f2095a927898aa29f8b030fd750000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000008402e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0x8Cb0990141604a81997459a38DFE8f754965aFB6\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.14.0)","timestamp":"2025-05-10T12:10:40.127Z"}
+{"level":"info","message":"Detected MessageSent on chain 97: messageId=0x925a9e248af3c33f886d3106ad4f9a64e1087de2fdd520e2cb06f9e1084da594, sender=0x874f37F9a1c7d6b47f89Dd250dd2897c9a7f86F4, target=0x1A3EA2fBab2081F2095A927898aa29f8b030fD75, nonce=5, data=0x02e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000005","timestamp":"2025-05-10T12:18:33.374Z"}
+{"level":"error","message":"Failed to estimate gas for message 0x925a9e248af3c33f886d3106ad4f9a64e1087de2fdd520e2cb06f9e1084da594 on chain 7863: execution reverted (unknown custom error) (action=\"estimateGas\", data=\"0xacfdb444\", reason=null, transaction={ \"data\": \"0x412df756925a9e248af3c33f886d3106ad4f9a64e1087de2fdd520e2cb06f9e1084da594000000000000000000000000218b64a61a9b366d0fad9208f33972c8bbb39f300000000000000000000000001a3ea2fbab2081f2095a927898aa29f8b030fd750000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000008402e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000000000000000000000000000000000000000000500000000000000000000000000000000000000000000000000000000\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0x8Cb0990141604a81997459a38DFE8f754965aFB6\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.14.0)","timestamp":"2025-05-10T12:18:34.253Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-10T12:26:28.796Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-10T12:28:03.656Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-10T12:28:03.658Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-10T12:28:03.659Z"}
+{"level":"info","message":"Initializing chain 7863...","timestamp":"2025-05-10T12:28:03.659Z"}
+{"level":"info","message":"Connected to RPC for chain 7863: https://node-testnet.maalscan.io/","timestamp":"2025-05-10T12:28:04.759Z"}
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-10T12:28:07.839Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-10T12:28:07.840Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-10T12:28:09.174Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-10T12:28:10.722Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-10T12:28:10.722Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-10T12:28:10.722Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-10T12:28:10.723Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-10T12:28:10.723Z"}
+{"level":"info","message":"Processing chain 7863 for event listener setup","timestamp":"2025-05-10T12:28:10.723Z"}
+{"level":"info","message":"Setting up event listener for chain 7863","timestamp":"2025-05-10T12:28:10.724Z"}
+{"level":"info","message":"Event listener active for chain 7863","timestamp":"2025-05-10T12:28:10.724Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-10T12:28:10.725Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-10T12:28:10.725Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-10T12:28:10.725Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-10T12:28:10.726Z"}
+{"level":"info","message":"Detected MessageSent on chain 97: messageId=0xeda7adfe8536f0a57fd4bb6232afafe40994ffe445a974cbea687b6966377dd7, sender=0x874f37F9a1c7d6b47f89Dd250dd2897c9a7f86F4, target=0x1A3EA2fBab2081F2095A927898aa29f8b030fD75, nonce=6, data=0x02e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000006","timestamp":"2025-05-10T12:28:41.255Z"}
+{"level":"error","message":"Simulated receiveMessage call failed for message 0xeda7adfe8536f0a57fd4bb6232afafe40994ffe445a974cbea687b6966377dd7: execution reverted (unknown custom error) (action=\"estimateGas\", data=\"0xacfdb444\", reason=null, transaction={ \"data\": \"0x412df756eda7adfe8536f0a57fd4bb6232afafe40994ffe445a974cbea687b6966377dd7000000000000000000000000218b64a61a9b366d0fad9208f33972c8bbb39f300000000000000000000000001a3ea2fbab2081f2095a927898aa29f8b030fd750000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000008402e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0x8Cb0990141604a81997459a38DFE8f754965aFB6\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.14.0)","revertData":"0xacfdb444","timestamp":"2025-05-10T12:28:43.710Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-10T12:30:23.989Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-12T02:19:08.758Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-12T02:19:08.762Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-12T02:19:08.763Z"}
+{"level":"info","message":"Initializing chain 7863...","timestamp":"2025-05-12T02:19:08.763Z"}
+{"level":"info","message":"Connected to RPC for chain 7863: https://node-testnet.maalscan.io/","timestamp":"2025-05-12T02:19:09.954Z"}
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-12T02:19:12.285Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-12T02:19:12.285Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-12T02:19:13.867Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-12T02:19:15.600Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-12T02:19:15.600Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-12T02:19:15.601Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-12T02:19:15.601Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-12T02:19:15.601Z"}
+{"level":"info","message":"Processing chain 7863 for event listener setup","timestamp":"2025-05-12T02:19:15.602Z"}
+{"level":"info","message":"Setting up event listener for chain 7863","timestamp":"2025-05-12T02:19:15.602Z"}
+{"level":"info","message":"Event listener active for chain 7863","timestamp":"2025-05-12T02:19:15.603Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-12T02:19:15.603Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-12T02:19:15.603Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-12T02:19:15.603Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-12T02:19:15.604Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-12T02:19:20.705Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-12T02:42:51.585Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-12T02:42:51.587Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-12T02:42:51.588Z"}
+{"level":"info","message":"Initializing chain 7863...","timestamp":"2025-05-12T02:42:51.588Z"}
+{"level":"info","message":"Connected to RPC for chain 7863: https://node-testnet.maalscan.io/","timestamp":"2025-05-12T02:42:52.901Z"}
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-12T02:42:55.938Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-12T02:42:55.938Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-12T02:42:57.249Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-12T02:42:58.785Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-12T02:42:58.786Z"}
+{"level":"error","message":"Failed to initialize chain 17000: server response 400 Bad Request (request={  }, response={  }, error=null, info={ \"requestUrl\": \"https://1rpc.io/holesky/\", \"responseBody\": \"unknown network\", \"responseStatus\": \"400 Bad Request\" }, code=SERVER_ERROR, version=6.14.0)","timestamp":"2025-05-12T02:43:00.173Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-12T02:44:05.787Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-12T02:44:05.790Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-12T02:44:05.791Z"}
+{"level":"info","message":"Initializing chain 7863...","timestamp":"2025-05-12T02:44:05.791Z"}
+{"level":"info","message":"Connected to RPC for chain 7863: https://node-testnet.maalscan.io/","timestamp":"2025-05-12T02:44:06.625Z"}
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-12T02:44:08.668Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-12T02:44:08.668Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-12T02:44:09.981Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-12T02:44:11.521Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-12T02:44:11.522Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://holesky.gateway.tenderly.co/","timestamp":"2025-05-12T02:44:12.287Z"}
+{"level":"error","message":"Failed to initialize chain 17000: could not decode result data (value=\"0x\", info={ \"method\": \"initialized\", \"signature\": \"initialized()\" }, code=BAD_DATA, version=6.14.0)","timestamp":"2025-05-12T02:44:12.516Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-12T02:44:35.771Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-12T02:44:35.774Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-12T02:44:35.774Z"}
+{"level":"info","message":"Initializing chain 7863...","timestamp":"2025-05-12T02:44:35.774Z"}
+{"level":"info","message":"Connected to RPC for chain 7863: https://node-testnet.maalscan.io/","timestamp":"2025-05-12T02:44:36.581Z"}
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-12T02:44:38.562Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-12T02:44:38.563Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-12T02:44:39.894Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-12T02:44:41.416Z"}
+{"level":"info","message":"Initializing chain 11155111...","timestamp":"2025-05-12T02:44:41.417Z"}
+{"level":"info","message":"Connected to RPC for chain 11155111: https://ethereum-sepolia-rpc.publicnode.com/","timestamp":"2025-05-12T02:44:42.075Z"}
+{"level":"error","message":"Failed to initialize chain 11155111: could not decode result data (value=\"0x\", info={ \"method\": \"initialized\", \"signature\": \"initialized()\" }, code=BAD_DATA, version=6.14.0)","timestamp":"2025-05-12T02:44:42.317Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-12T02:47:21.478Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-12T02:47:21.481Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-12T02:47:21.482Z"}
+{"level":"info","message":"Initializing chain 7863...","timestamp":"2025-05-12T02:47:21.482Z"}
+{"level":"info","message":"Connected to RPC for chain 7863: https://node-testnet.maalscan.io/","timestamp":"2025-05-12T02:47:22.475Z"}
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-12T02:47:24.671Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-12T02:47:24.671Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-12T02:47:25.997Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-12T02:47:27.536Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-12T02:47:27.537Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://holesky.gateway.tenderly.co/","timestamp":"2025-05-12T02:47:28.334Z"}
+{"level":"error","message":"Bridge contract on chain 17000 is not initialized","timestamp":"2025-05-12T02:47:28.568Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-12T06:07:50.279Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-12T06:07:50.283Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-12T06:07:50.284Z"}
+{"level":"info","message":"Initializing chain 7863...","timestamp":"2025-05-12T06:07:50.284Z"}
+{"level":"info","message":"Connected to RPC for chain 7863: https://node-testnet.maalscan.io/","timestamp":"2025-05-12T06:07:51.638Z"}
+{"level":"info","message":"Initialized chain 7863: Bridge at 0x8Cb0990141604a81997459a38DFE8f754965aFB6","timestamp":"2025-05-12T06:07:54.985Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-12T06:07:54.985Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-12T06:07:56.281Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-12T06:07:57.819Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-12T06:07:57.820Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://holesky.gateway.tenderly.co/","timestamp":"2025-05-12T06:07:58.585Z"}
+{"level":"info","message":"Initialized chain 17000: Bridge at 0xe92b38e1793E308D0CeC9BEB35E49A403dCa71E9","timestamp":"2025-05-12T06:08:01.829Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-12T06:08:01.830Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-12T06:08:01.830Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-12T06:08:01.830Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-12T06:08:01.831Z"}
+{"level":"info","message":"Processing chain 7863 for event listener setup","timestamp":"2025-05-12T06:08:01.831Z"}
+{"level":"info","message":"Setting up event listener for chain 7863","timestamp":"2025-05-12T06:08:01.831Z"}
+{"level":"info","message":"Event listener active for chain 7863","timestamp":"2025-05-12T06:08:01.832Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-12T06:08:01.832Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-12T06:08:01.832Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-12T06:08:01.833Z"}
+{"level":"info","message":"Processing chain 17000 for event listener setup","timestamp":"2025-05-12T06:08:01.833Z"}
+{"level":"info","message":"Setting up event listener for chain 17000","timestamp":"2025-05-12T06:08:01.834Z"}
+{"level":"info","message":"Event listener active for chain 17000","timestamp":"2025-05-12T06:08:01.834Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-12T06:08:01.834Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-12T06:08:13.867Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-12T06:09:06.935Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-12T06:09:06.938Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-12T06:09:06.938Z"}
+{"level":"info","message":"Initializing chain 7863...","timestamp":"2025-05-12T06:09:06.939Z"}
+{"level":"info","message":"Connected to RPC for chain 7863: https://node-testnet.maalscan.io/","timestamp":"2025-05-12T06:09:08.222Z"}
+{"level":"error","message":"Bridge contract on chain 7863 has incorrect remoteBridge: expected 0xBB41c86aC178BAF87c5b3e05890701BF0fEc6bE4, got 0x218b64A61a9B366d0FAd9208F33972c8BBb39f30","timestamp":"2025-05-12T06:09:09.063Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-12T06:09:40.600Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-12T06:09:40.603Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-12T06:09:40.603Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-12T06:09:40.604Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-12T06:09:41.946Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0xBB41c86aC178BAF87c5b3e05890701BF0fEc6bE4","timestamp":"2025-05-12T06:09:43.501Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-12T06:09:43.502Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://holesky.gateway.tenderly.co/","timestamp":"2025-05-12T06:09:44.249Z"}
+{"level":"info","message":"Initialized chain 17000: Bridge at 0xcF945a308d2650B1B3D8d6a4cF8989fF20f98278","timestamp":"2025-05-12T06:09:45.473Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-12T06:09:45.473Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-12T06:09:45.474Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-12T06:09:45.474Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-12T06:09:45.475Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-12T06:09:45.475Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-12T06:09:45.475Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-12T06:09:45.476Z"}
+{"level":"info","message":"Processing chain 17000 for event listener setup","timestamp":"2025-05-12T06:09:45.476Z"}
+{"level":"info","message":"Setting up event listener for chain 17000","timestamp":"2025-05-12T06:09:45.476Z"}
+{"level":"info","message":"Event listener active for chain 17000","timestamp":"2025-05-12T06:09:45.477Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-12T06:09:45.477Z"}
+{"level":"info","message":"Detected MessageSent on chain 17000: messageId=0xb7bc0eb9519f94d534a51cc4e1060290c56193dc90c3b1841ca799ce32f76352, sender=0x74509228221bF6eC107B7BE8Bc6242D4Bbd617D5, target=0x0f0b2Baf6Bf7E3cB47902B20ffB943a3036550CD, nonce=1, data=0x02e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000604756016db44ad0a38d2787b8e2e3563b03ab4e0000000000000000000000000000000000000000000000056bc75e2d631000000000000000000000000000000000000000000000000000000000000000000001","timestamp":"2025-05-12T06:19:42.183Z"}
+{"level":"error","message":"Simulated receiveMessage call failed for message 0xb7bc0eb9519f94d534a51cc4e1060290c56193dc90c3b1841ca799ce32f76352: execution reverted (unknown custom error) (action=\"estimateGas\", data=\"0xacfdb444\", reason=null, transaction={ \"data\": \"0x412df756b7bc0eb9519f94d534a51cc4e1060290c56193dc90c3b1841ca799ce32f76352000000000000000000000000cf945a308d2650b1b3d8d6a4cf8989ff20f982780000000000000000000000000f0b2baf6bf7e3cb47902b20ffb943a3036550cd0000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000008402e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000604756016db44ad0a38d2787b8e2e3563b03ab4e0000000000000000000000000000000000000000000000056bc75e2d63100000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0xBB41c86aC178BAF87c5b3e05890701BF0fEc6bE4\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.14.0)","revertData":"0xacfdb444","timestamp":"2025-05-12T06:19:43.368Z"}
+{"level":"info","message":"Detected MessageSent on chain 97: messageId=0x75b6a8850c19196db2fdbd275ca515ec5c7b5fff4f927b836ad2ebe7fb6c89cd, sender=0x0f0b2Baf6Bf7E3cB47902B20ffB943a3036550CD, target=0x74509228221bF6eC107B7BE8Bc6242D4Bbd617D5, nonce=1, data=0x02e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000001","timestamp":"2025-05-12T06:22:52.700Z"}
+{"level":"error","message":"Simulated receiveMessage call failed for message 0x75b6a8850c19196db2fdbd275ca515ec5c7b5fff4f927b836ad2ebe7fb6c89cd: execution reverted (unknown custom error) (action=\"estimateGas\", data=\"0xacfdb444\", reason=null, transaction={ \"data\": \"0x412df75675b6a8850c19196db2fdbd275ca515ec5c7b5fff4f927b836ad2ebe7fb6c89cd000000000000000000000000bb41c86ac178baf87c5b3e05890701bf0fec6be400000000000000000000000074509228221bf6ec107b7be8bc6242d4bbd617d50000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000008402e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0xcF945a308d2650B1B3D8d6a4cF8989fF20f98278\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.14.0)","revertData":"0xacfdb444","timestamp":"2025-05-12T06:22:54.205Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-12T07:07:49.723Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-12T07:12:05.889Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-12T07:12:05.892Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-12T07:12:05.892Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-12T07:12:05.892Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-12T07:12:07.695Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-12T07:12:22.040Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-12T07:12:22.043Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-12T07:12:22.043Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-12T07:12:22.044Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-12T07:12:23.269Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0xBB41c86aC178BAF87c5b3e05890701BF0fEc6bE4","timestamp":"2025-05-12T07:12:24.824Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-12T07:12:24.825Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://holesky.gateway.tenderly.co/","timestamp":"2025-05-12T07:12:25.598Z"}
+{"level":"info","message":"Initialized chain 17000: Bridge at 0xcF945a308d2650B1B3D8d6a4cF8989fF20f98278","timestamp":"2025-05-12T07:12:26.770Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-12T07:12:26.771Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-12T07:12:26.771Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-12T07:12:26.772Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-12T07:12:26.772Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-12T07:12:26.772Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-12T07:12:26.772Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-12T07:12:26.773Z"}
+{"level":"info","message":"Processing chain 17000 for event listener setup","timestamp":"2025-05-12T07:12:26.773Z"}
+{"level":"info","message":"Setting up event listener for chain 17000","timestamp":"2025-05-12T07:12:26.774Z"}
+{"level":"info","message":"Event listener active for chain 17000","timestamp":"2025-05-12T07:12:26.774Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-12T07:12:26.774Z"}
+{"level":"info","message":"Detected MessageSent on chain 97: messageId=0x965fbb9c2a955fdcf78697fcde61b57a34317e49a6484dc088c606e13921f745, sender=0x0f0b2Baf6Bf7E3cB47902B20ffB943a3036550CD, target=0x74509228221bF6eC107B7BE8Bc6242D4Bbd617D5, nonce=2, data=0x02e1aacf0000000000000000000000001029b4422b84eae4559d047b824fab6db1189df5000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000002","timestamp":"2025-05-12T07:12:57.206Z"}
+{"level":"error","message":"Failed to estimate gas for message 0x965fbb9c2a955fdcf78697fcde61b57a34317e49a6484dc088c606e13921f745 on chain 17000: execution reverted (unknown custom error) (action=\"estimateGas\", data=\"0xacfdb444\", reason=null, transaction={ \"data\": \"0x412df756965fbb9c2a955fdcf78697fcde61b57a34317e49a6484dc088c606e13921f745000000000000000000000000bb41c86ac178baf87c5b3e05890701bf0fec6be400000000000000000000000074509228221bf6ec107b7be8bc6242d4bbd617d50000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000008402e1aacf0000000000000000000000001029b4422b84eae4559d047b824fab6db1189df5000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0xcF945a308d2650B1B3D8d6a4cF8989fF20f98278\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.14.0)","revertData":"0xacfdb444","timestamp":"2025-05-12T07:12:58.721Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-12T07:13:13.667Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T16:58:09.112Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T16:58:09.117Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T16:58:09.117Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T16:58:09.117Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T16:58:10.077Z"}
+{"level":"info","message":"Initialized chain 97: Bridge at 0x603494d445893FF5CE1b8dc3195A1240081FCC42","timestamp":"2025-05-13T16:58:11.134Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-13T16:58:11.135Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://holesky.gateway.tenderly.co/","timestamp":"2025-05-13T16:58:11.831Z"}
+{"level":"info","message":"Initialized chain 17000: Bridge at 0xAaFB3EfBBb233811Cfff0e48f147D16b36641E07","timestamp":"2025-05-13T16:58:13.277Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-13T16:58:13.278Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-13T16:58:13.278Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-13T16:58:13.278Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-13T16:58:13.279Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-13T16:58:13.279Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-13T16:58:13.279Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-13T16:58:13.280Z"}
+{"level":"info","message":"Processing chain 17000 for event listener setup","timestamp":"2025-05-13T16:58:13.280Z"}
+{"level":"info","message":"Setting up event listener for chain 17000","timestamp":"2025-05-13T16:58:13.280Z"}
+{"level":"info","message":"Event listener active for chain 17000","timestamp":"2025-05-13T16:58:13.281Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-13T16:58:13.281Z"}
+{"level":"info","message":"Detected MessageSent on chain 17000: messageId=0x5ef94520c4731377446338ac2cf1121e234f36cfdaaf147b0eed7f42b5b485a5, sender=0x30Fc5413Be1eb05f9E27A5139f255dDe777512e8, target=0xDDe0DF78d925Eda73A3fcCAe81f26Bf4D602a5d2, nonce=1, data=0x02e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000604756016db44ad0a38d2787b8e2e3563b03ab4e0000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000001","timestamp":"2025-05-13T17:03:41.049Z"}
+{"level":"error","message":"Failed to estimate gas for message 0x5ef94520c4731377446338ac2cf1121e234f36cfdaaf147b0eed7f42b5b485a5 on chain 97: execution reverted (unknown custom error) (action=\"estimateGas\", data=\"0xacfdb444\", reason=null, transaction={ \"data\": \"0x412df7565ef94520c4731377446338ac2cf1121e234f36cfdaaf147b0eed7f42b5b485a5000000000000000000000000aafb3efbbb233811cfff0e48f147d16b36641e07000000000000000000000000dde0df78d925eda73a3fccae81f26bf4d602a5d20000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000008402e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000604756016db44ad0a38d2787b8e2e3563b03ab4e0000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0x603494d445893FF5CE1b8dc3195A1240081FCC42\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.14.0)","revertData":"0xacfdb444","timestamp":"2025-05-13T17:03:41.857Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-13T17:47:40.922Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T19:19:00.474Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T19:19:00.477Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T19:19:00.477Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T19:19:00.477Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T19:19:01.337Z"}
+{"level":"error","message":"Failed to initialize chain 97: missing revert data (action=\"call\", data=null, reason=null, transaction={ \"data\": \"0xd191bcf9\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0xDDe0DF78d925Eda73A3fcCAe81f26Bf4D602a5d2\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.14.0)","timestamp":"2025-05-13T19:19:01.782Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T19:21:07.247Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T19:21:07.249Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T19:21:07.250Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T19:21:07.250Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T19:21:08.100Z"}
+{"level":"error","message":"TokenBridge contract on chain 97 is not initialized","timestamp":"2025-05-13T19:21:08.348Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T19:26:59.533Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T19:26:59.536Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T19:26:59.536Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T19:26:59.537Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T19:27:00.425Z"}
+{"level":"error","message":"Failed to initialize chain 97: tokenBridgeContract.remoteMediator is not a function","timestamp":"2025-05-13T19:27:00.899Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T19:27:47.416Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T19:27:47.419Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T19:27:47.419Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T19:27:47.419Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T19:27:48.276Z"}
+{"level":"info","message":"Initialized chain 97: TokenBridge at 0x1008b5422dd7529842005113ce942f6a2e942c94","timestamp":"2025-05-13T19:27:49.114Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-13T19:27:49.115Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://holesky.gateway.tenderly.co/","timestamp":"2025-05-13T19:27:49.828Z"}
+{"level":"info","message":"Initialized chain 17000: TokenBridge at 0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4","timestamp":"2025-05-13T19:27:51.010Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-13T19:27:51.010Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-13T19:27:51.010Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-13T19:27:51.011Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-13T19:27:51.011Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-13T19:27:51.012Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-13T19:27:51.012Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-13T19:27:51.013Z"}
+{"level":"info","message":"Processing chain 17000 for event listener setup","timestamp":"2025-05-13T19:27:51.013Z"}
+{"level":"info","message":"Setting up event listener for chain 17000","timestamp":"2025-05-13T19:27:51.013Z"}
+{"level":"info","message":"Event listener active for chain 17000","timestamp":"2025-05-13T19:27:51.014Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-13T19:27:51.014Z"}
+{"level":"info","message":"Detected MessageSent on chain 17000: messageId=0xfc5cb6720b72b6ba794129d7372484532106a1757ec9bf1dd6a709e97be9b7c2, sender=0x1029B4422b84eAe4559D047B824faB6db1189dF5, target=0x1008b5422dd7529842005113ce942f6a2e942c94, nonce=1, data=0x02e1aacf0000000000000000000000001029b4422b84eae4559d047b824fab6db1189df5000000000000000000000000604756016db44ad0a38d2787b8e2e3563b03ab4e0000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000001","timestamp":"2025-05-13T19:30:29.237Z"}
+{"level":"error","message":"Invalid target for message 0xfc5cb6720b72b6ba794129d7372484532106a1757ec9bf1dd6a709e97be9b7c2: target=0x1008b5422dd7529842005113ce942f6a2e942c94, expected remoteTokenBridge=0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4","timestamp":"2025-05-13T19:30:29.626Z"}
+{"level":"info","message":"Handling failed message 0xfc5cb6720b72b6ba794129d7372484532106a1757ec9bf1dd6a709e97be9b7c2 on source chain 17000","timestamp":"2025-05-13T19:30:29.627Z"}
+{"level":"error","message":"Failed to fix message 0xfc5cb6720b72b6ba794129d7372484532106a1757ec9bf1dd6a709e97be9b7c2 on chain 17000: exceeded maximum retry limit (request={  }, response={  }, error=null, info={ \"requestUrl\": \"https://holesky.gateway.tenderly.co/\", \"responseBody\": \"{\\\"id\\\":94,\\\"jsonrpc\\\":\\\"2.0\\\",\\\"error\\\":{\\\"code\\\":-32005,\\\"message\\\":\\\"rate limit exceeded\\\"}}\", \"responseStatus\": \"599 CLIENT ESCALATED SERVER ERROR (429 Too Many Requests; exceeded maximum retry limit)\" }, code=SERVER_ERROR, version=6.14.0)","timestamp":"2025-05-13T19:35:20.357Z"}
+{"level":"info","message":"Detected MessageSent on chain 97: messageId=0x39392567e7c531b723b13b1fe2e776e4f7636cf774a92a9c4b1b170ce8805790, sender=0x1029B4422b84eAe4559D047B824faB6db1189dF5, target=0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4, nonce=1, data=0x02e1aacf0000000000000000000000001029b4422b84eae4559d047b824fab6db1189df5000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000001","timestamp":"2025-05-13T19:39:59.446Z"}
+{"level":"error","message":"Invalid target for message 0x39392567e7c531b723b13b1fe2e776e4f7636cf774a92a9c4b1b170ce8805790: target=0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4, expected remoteTokenBridge=0x1008b5422dd7529842005113ce942f6a2e942c94","timestamp":"2025-05-13T19:40:00.021Z"}
+{"level":"info","message":"Handling failed message 0x39392567e7c531b723b13b1fe2e776e4f7636cf774a92a9c4b1b170ce8805790 on source chain 97","timestamp":"2025-05-13T19:40:00.021Z"}
+{"level":"info","message":"fixFailedMessage transaction sent for message 0x39392567e7c531b723b13b1fe2e776e4f7636cf774a92a9c4b1b170ce8805790: 0xe0fd5016a5208a6093c4fa4cf2c0686d9ae1c9f4010e993009189aed3a0c0701","timestamp":"2025-05-13T19:40:01.742Z"}
+{"level":"info","message":"Message 0x39392567e7c531b723b13b1fe2e776e4f7636cf774a92a9c4b1b170ce8805790 successfully fixed on chain 97: tx=0xe0fd5016a5208a6093c4fa4cf2c0686d9ae1c9f4010e993009189aed3a0c0701","timestamp":"2025-05-13T19:40:04.067Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-13T20:12:47.141Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T20:12:57.471Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T20:12:57.473Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T20:12:57.474Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T20:12:57.474Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T20:12:58.323Z"}
+{"level":"info","message":"Initialized chain 97: TokenBridge at 0x1008b5422dd7529842005113ce942f6a2e942c94","timestamp":"2025-05-13T20:12:59.185Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-13T20:12:59.185Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://holesky.gateway.tenderly.co/","timestamp":"2025-05-13T20:12:59.867Z"}
+{"level":"info","message":"Initialized chain 17000: TokenBridge at 0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4","timestamp":"2025-05-13T20:13:01.005Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-13T20:13:01.006Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-13T20:13:01.006Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-13T20:13:01.006Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-13T20:13:01.007Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-13T20:13:01.007Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-13T20:13:01.007Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-13T20:13:01.008Z"}
+{"level":"info","message":"Processing chain 17000 for event listener setup","timestamp":"2025-05-13T20:13:01.009Z"}
+{"level":"info","message":"Setting up event listener for chain 17000","timestamp":"2025-05-13T20:13:01.009Z"}
+{"level":"info","message":"Event listener active for chain 17000","timestamp":"2025-05-13T20:13:01.009Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-13T20:13:01.010Z"}
+{"level":"info","message":"Detected MessageSent on chain 17000: messageId=0x50ec8aa5f1c5dde68bad705408a259dcf3190507cfff52c898a17d18079a4b30, sender=0xBA43b24B591ac215337a55247cc7ACAcd744aD94, target=0x1008b5422dd7529842005113ce942f6a2e942c94, nonce=2, data=0x02e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000604756016db44ad0a38d2787b8e2e3563b03ab4e0000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000002","timestamp":"2025-05-13T20:16:16.631Z"}
+{"level":"error","message":"Failed to estimate gas for message 0x50ec8aa5f1c5dde68bad705408a259dcf3190507cfff52c898a17d18079a4b30 on chain 97: execution reverted: \"ReentrancyGuard: reentrant call\" (action=\"estimateGas\", data=\"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001f5265656e7472616e637947756172643a207265656e7472616e742063616c6c00\", reason=\"ReentrancyGuard: reentrant call\", transaction={ \"data\": \"0x412df75650ec8aa5f1c5dde68bad705408a259dcf3190507cfff52c898a17d18079a4b30000000000000000000000000fc136cd4f6e1df1439bb15eef21ad50d587be3b40000000000000000000000001008b5422dd7529842005113ce942f6a2e942c940000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000008402e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000604756016db44ad0a38d2787b8e2e3563b03ab4e0000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0x1008b5422dd7529842005113ce942f6a2e942c94\" }, invocation=null, revert={ \"args\": [ \"ReentrancyGuard: reentrant call\" ], \"name\": \"Error\", \"signature\": \"Error(string)\" }, code=CALL_EXCEPTION, version=6.14.0)","revertData":"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001f5265656e7472616e637947756172643a207265656e7472616e742063616c6c00","timestamp":"2025-05-13T20:16:17.230Z"}
+{"level":"info","message":"Handling failed message 0x50ec8aa5f1c5dde68bad705408a259dcf3190507cfff52c898a17d18079a4b30 on source chain 17000","timestamp":"2025-05-13T20:16:17.231Z"}
+{"level":"warn","message":"Retry 1/5 for fixFailedMessage 0x50ec8aa5f1c5dde68bad705408a259dcf3190507cfff52c898a17d18079a4b30: exceeded maximum retry limit (request={  }, response={  }, error=null, info={ \"requestUrl\": \"https://holesky.gateway.tenderly.co/\", \"responseBody\": \"{\\\"id\\\":97,\\\"jsonrpc\\\":\\\"2.0\\\",\\\"error\\\":{\\\"code\\\":-32005,\\\"message\\\":\\\"rate limit exceeded\\\"}}\", \"responseStatus\": \"599 CLIENT ESCALATED SERVER ERROR (429 Too Many Requests; exceeded maximum retry limit)\" }, code=SERVER_ERROR, version=6.14.0)","timestamp":"2025-05-13T20:19:30.925Z"}
+{"level":"info","message":"Detected MessageSent on chain 97: messageId=0x62256007014cacf528b72bde3f6289ac05d7992dd76086a037dc5a9b5a44e0d9, sender=0xBA43b24B591ac215337a55247cc7ACAcd744aD94, target=0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4, nonce=2, data=0x02e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000002","timestamp":"2025-05-13T20:20:51.712Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-13T20:24:04.701Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T20:24:43.605Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T20:24:43.608Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T20:24:43.608Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T20:24:43.608Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T20:24:44.441Z"}
+{"level":"info","message":"Initialized chain 97: TokenBridge at 0x1008b5422dd7529842005113ce942f6a2e942c94","timestamp":"2025-05-13T20:24:45.245Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-13T20:24:45.245Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://holesky.infura.io/v3/22246f0ab774481f8a2939dd236ee973/","timestamp":"2025-05-13T20:24:47.345Z"}
+{"level":"error","message":"Failed to initialize chain 17000: missing revert data (action=\"call\", data=null, reason=null, transaction={ \"data\": \"0x158ef93e\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.14.0)","timestamp":"2025-05-13T20:24:47.693Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T20:25:10.839Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T20:25:10.842Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T20:25:10.842Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T20:25:10.842Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T20:25:11.557Z"}
+{"level":"info","message":"Initialized chain 97: TokenBridge at 0x1008b5422dd7529842005113ce942f6a2e942c94","timestamp":"2025-05-13T20:25:12.384Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-13T20:25:12.385Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://holesky.infura.io/v3/22246f0ab774481f8a2939dd236ee973/","timestamp":"2025-05-13T20:25:14.192Z"}
+{"level":"error","message":"Failed to initialize chain 17000: missing revert data (action=\"call\", data=null, reason=null, transaction={ \"data\": \"0x158ef93e\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.14.0)","timestamp":"2025-05-13T20:25:14.542Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T20:25:39.988Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T20:25:39.991Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T20:25:39.991Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T20:25:39.992Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T20:25:40.832Z"}
+{"level":"info","message":"Initialized chain 97: TokenBridge at 0x1008b5422dd7529842005113ce942f6a2e942c94","timestamp":"2025-05-13T20:25:41.650Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-13T20:25:41.650Z"}
+{"level":"warn","message":"Primary RPC failed for chain 17000: response body is not valid JSON (operation=\"bodyJson\", info={ \"response\": {  } }, code=UNSUPPORTED_OPERATION, version=6.14.0)","timestamp":"2025-05-13T20:25:42.492Z"}
+{"level":"info","message":"Switching to fallback RPC: https://holesky.infura.io/v3/22246f0ab774481f8a2939dd236ee973","timestamp":"2025-05-13T20:25:42.492Z"}
+{"level":"info","message":"Connected to fallback RPC for chain 17000: https://holesky.infura.io/v3/22246f0ab774481f8a2939dd236ee973","timestamp":"2025-05-13T20:25:44.293Z"}
+{"level":"error","message":"Failed to initialize chain 17000: missing revert data (action=\"call\", data=null, reason=null, transaction={ \"data\": \"0x158ef93e\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4\" }, invocation=null, revert=null, code=CALL_EXCEPTION, version=6.14.0)","timestamp":"2025-05-13T20:25:44.665Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T20:27:13.334Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T20:27:13.337Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T20:27:13.337Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T20:27:13.338Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T20:27:14.168Z"}
+{"level":"info","message":"Initialized chain 97: TokenBridge at 0x1008b5422dd7529842005113ce942f6a2e942c94","timestamp":"2025-05-13T20:27:14.992Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-13T20:27:14.993Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://ethereum-holesky-rpc.publicnode.com/","timestamp":"2025-05-13T20:27:16.225Z"}
+{"level":"info","message":"Initialized chain 17000: TokenBridge at 0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4","timestamp":"2025-05-13T20:27:18.743Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-13T20:27:18.744Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-13T20:27:18.744Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-13T20:27:18.744Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-13T20:27:18.744Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-13T20:27:18.745Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-13T20:27:18.745Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-13T20:27:18.745Z"}
+{"level":"info","message":"Processing chain 17000 for event listener setup","timestamp":"2025-05-13T20:27:18.746Z"}
+{"level":"info","message":"Setting up event listener for chain 17000","timestamp":"2025-05-13T20:27:18.746Z"}
+{"level":"info","message":"Event listener active for chain 17000","timestamp":"2025-05-13T20:27:18.746Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-13T20:27:18.747Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-13T20:29:19.845Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T20:29:31.351Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T20:29:31.355Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T20:29:31.356Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T20:29:31.356Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T20:29:32.231Z"}
+{"level":"info","message":"Initialized chain 97: TokenBridge at 0x1008b5422dd7529842005113ce942f6a2e942c94","timestamp":"2025-05-13T20:29:33.101Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-13T20:29:33.101Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://ethereum-holesky-rpc.publicnode.com/","timestamp":"2025-05-13T20:29:34.189Z"}
+{"level":"info","message":"Initialized chain 17000: TokenBridge at 0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4","timestamp":"2025-05-13T20:29:36.663Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-13T20:29:36.664Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-13T20:29:36.664Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-13T20:29:36.665Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-13T20:29:36.665Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-13T20:29:36.665Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-13T20:29:36.666Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-13T20:29:36.667Z"}
+{"level":"info","message":"Processing chain 17000 for event listener setup","timestamp":"2025-05-13T20:29:36.667Z"}
+{"level":"info","message":"Setting up event listener for chain 17000","timestamp":"2025-05-13T20:29:36.667Z"}
+{"level":"info","message":"Event listener active for chain 17000","timestamp":"2025-05-13T20:29:36.667Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-13T20:29:36.668Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-13T20:31:43.157Z"}
+{"level":"info","message":"Creating Relayer instance...","timestamp":"2025-05-13T20:31:56.856Z"}
+{"level":"info","message":"Initializing Relayer...","timestamp":"2025-05-13T20:31:56.859Z"}
+{"level":"info","message":"Starting initialization...","timestamp":"2025-05-13T20:31:56.860Z"}
+{"level":"info","message":"Initializing chain 97...","timestamp":"2025-05-13T20:31:56.860Z"}
+{"level":"info","message":"Connected to RPC for chain 97: https://data-seed-prebsc-1-s1.binance.org:8545/","timestamp":"2025-05-13T20:31:57.705Z"}
+{"level":"info","message":"Initialized chain 97: TokenBridge at 0x1008b5422dd7529842005113ce942f6a2e942c94","timestamp":"2025-05-13T20:31:58.535Z"}
+{"level":"info","message":"Initializing chain 17000...","timestamp":"2025-05-13T20:31:58.535Z"}
+{"level":"info","message":"Connected to RPC for chain 17000: https://ethereum-holesky-rpc.publicnode.com/","timestamp":"2025-05-13T20:31:59.779Z"}
+{"level":"info","message":"Initialized chain 17000: TokenBridge at 0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4","timestamp":"2025-05-13T20:32:01.813Z"}
+{"level":"info","message":"Initialization complete","timestamp":"2025-05-13T20:32:01.814Z"}
+{"level":"info","message":"Starting Relayer...","timestamp":"2025-05-13T20:32:01.814Z"}
+{"level":"info","message":"Starting relayer...","timestamp":"2025-05-13T20:32:01.814Z"}
+{"level":"info","message":"Setting up event listeners...","timestamp":"2025-05-13T20:32:01.815Z"}
+{"level":"info","message":"Processing chain 97 for event listener setup","timestamp":"2025-05-13T20:32:01.815Z"}
+{"level":"info","message":"Setting up event listener for chain 97","timestamp":"2025-05-13T20:32:01.815Z"}
+{"level":"info","message":"Event listener active for chain 97","timestamp":"2025-05-13T20:32:01.816Z"}
+{"level":"info","message":"Processing chain 17000 for event listener setup","timestamp":"2025-05-13T20:32:01.816Z"}
+{"level":"info","message":"Setting up event listener for chain 17000","timestamp":"2025-05-13T20:32:01.816Z"}
+{"level":"info","message":"Event listener active for chain 17000","timestamp":"2025-05-13T20:32:01.817Z"}
+{"level":"info","message":"All event listeners set up","timestamp":"2025-05-13T20:32:01.817Z"}
+{"level":"info","message":"Detected MessageSent on chain 17000: messageId=0x1ff3668f974367a65edada4aa6d9e583d0722348f5359d03f6181483b2b21c37, sender=0xBA43b24B591ac215337a55247cc7ACAcd744aD94, target=0x1008b5422dd7529842005113ce942f6a2e942c94, nonce=3, data=0x02e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000604756016db44ad0a38d2787b8e2e3563b03ab4e0000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000003","timestamp":"2025-05-13T20:33:16.318Z"}
+{"level":"info","message":"Decoded handleBridgedTokens: recipient=0xBA43b24B591ac215337a55247cc7ACAcd744aD94, token=0x604756016db44ad0a38d2787B8e2E3563b03Ab4e, value=10000000000000000000, nonce=3","timestamp":"2025-05-13T20:33:16.525Z"}
+{"level":"error","message":"Failed to estimate gas for message 0x1ff3668f974367a65edada4aa6d9e583d0722348f5359d03f6181483b2b21c37 on chain 97: execution reverted: \"ReentrancyGuard: reentrant call\" (action=\"estimateGas\", data=\"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001f5265656e7472616e637947756172643a207265656e7472616e742063616c6c00\", reason=\"ReentrancyGuard: reentrant call\", transaction={ \"data\": \"0x412df7561ff3668f974367a65edada4aa6d9e583d0722348f5359d03f6181483b2b21c37000000000000000000000000fc136cd4f6e1df1439bb15eef21ad50d587be3b40000000000000000000000001008b5422dd7529842005113ce942f6a2e942c940000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000008402e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000604756016db44ad0a38d2787b8e2e3563b03ab4e0000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0x1008b5422dd7529842005113ce942f6a2e942c94\" }, invocation=null, revert={ \"args\": [ \"ReentrancyGuard: reentrant call\" ], \"name\": \"Error\", \"signature\": \"Error(string)\" }, code=CALL_EXCEPTION, version=6.14.0)","reason":"ReentrancyGuard: reentrant call","revertData":"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001f5265656e7472616e637947756172643a207265656e7472616e742063616c6c00","timestamp":"2025-05-13T20:33:16.923Z"}
+{"level":"warn","message":"Reentrancy detected for message 0x1ff3668f974367a65edada4aa6d9e583d0722348f5359d03f6181483b2b21c37, queuing for later retry","timestamp":"2025-05-13T20:33:16.923Z"}
+{"level":"info","message":"Handling failed message 0x1ff3668f974367a65edada4aa6d9e583d0722348f5359d03f6181483b2b21c37 on source chain 17000","timestamp":"2025-05-13T20:33:16.925Z"}
+{"level":"info","message":"fixFailedMessage transaction sent for message 0x1ff3668f974367a65edada4aa6d9e583d0722348f5359d03f6181483b2b21c37: 0x5dad844d41ce8cfdd5d2649bff5b901afe768c0ad5eb7b41081ca34a77daaa9b","timestamp":"2025-05-13T20:33:21.302Z"}
+{"level":"info","message":"Message 0x1ff3668f974367a65edada4aa6d9e583d0722348f5359d03f6181483b2b21c37 successfully fixed on chain 17000: tx=0x5dad844d41ce8cfdd5d2649bff5b901afe768c0ad5eb7b41081ca34a77daaa9b","timestamp":"2025-05-13T20:33:41.301Z"}
+{"level":"info","message":"Detected MessageSent on chain 97: messageId=0x7a6a74890c238c759712baff08ceb3bb03f550411fd1c9397a17611d21c2dd8c, sender=0xBA43b24B591ac215337a55247cc7ACAcd744aD94, target=0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4, nonce=3, data=0x02e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e800000000000000000000000000000000000000000000000000000000000000000003","timestamp":"2025-05-13T20:35:33.380Z"}
+{"level":"info","message":"Decoded handleBridgedTokens: recipient=0xBA43b24B591ac215337a55247cc7ACAcd744aD94, token=0xaCcfdB7767ddcF5f088ec9B8d726A76b29BAB768, value=10000000000000000000, nonce=3","timestamp":"2025-05-13T20:35:34.173Z"}
+{"level":"error","message":"Failed to estimate gas for message 0x7a6a74890c238c759712baff08ceb3bb03f550411fd1c9397a17611d21c2dd8c on chain 17000: execution reverted: \"ReentrancyGuard: reentrant call\" (action=\"estimateGas\", data=\"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001f5265656e7472616e637947756172643a207265656e7472616e742063616c6c00\", reason=\"ReentrancyGuard: reentrant call\", transaction={ \"data\": \"0x412df7567a6a74890c238c759712baff08ceb3bb03f550411fd1c9397a17611d21c2dd8c0000000000000000000000001008b5422dd7529842005113ce942f6a2e942c94000000000000000000000000fc136cd4f6e1df1439bb15eef21ad50d587be3b40000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000008402e1aacf000000000000000000000000ba43b24b591ac215337a55247cc7acacd744ad94000000000000000000000000accfdb7767ddcf5f088ec9b8d726a76b29bab7680000000000000000000000000000000000000000000000008ac7230489e80000000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000\", \"from\": \"0x1029B4422b84eAe4559D047B824faB6db1189dF5\", \"to\": \"0xfc136cD4f6E1DF1439Bb15EEf21Ad50d587bE3b4\" }, invocation=null, revert={ \"args\": [ \"ReentrancyGuard: reentrant call\" ], \"name\": \"Error\", \"signature\": \"Error(string)\" }, code=CALL_EXCEPTION, version=6.14.0)","reason":"ReentrancyGuard: reentrant call","revertData":"0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001f5265656e7472616e637947756172643a207265656e7472616e742063616c6c00","timestamp":"2025-05-13T20:35:34.994Z"}
+{"level":"warn","message":"Reentrancy detected for message 0x7a6a74890c238c759712baff08ceb3bb03f550411fd1c9397a17611d21c2dd8c, queuing for later retry","timestamp":"2025-05-13T20:35:34.995Z"}
+{"level":"info","message":"Handling failed message 0x7a6a74890c238c759712baff08ceb3bb03f550411fd1c9397a17611d21c2dd8c on source chain 97","timestamp":"2025-05-13T20:35:34.997Z"}
+{"level":"info","message":"fixFailedMessage transaction sent for message 0x7a6a74890c238c759712baff08ceb3bb03f550411fd1c9397a17611d21c2dd8c: 0x907d68056ae0ec588520b1bab62653364cddd71c458f70d8097f534025be7741","timestamp":"2025-05-13T20:35:36.551Z"}
+{"level":"info","message":"Message 0x7a6a74890c238c759712baff08ceb3bb03f550411fd1c9397a17611d21c2dd8c successfully fixed on chain 97: tx=0x907d68056ae0ec588520b1bab62653364cddd71c458f70d8097f534025be7741","timestamp":"2025-05-13T20:35:42.173Z"}
+{"level":"info","message":"Shutting down relayer...","timestamp":"2025-05-13T20:38:10.701Z"}
