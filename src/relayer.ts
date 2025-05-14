@@ -181,174 +181,359 @@ class Relayer {
   private async setupEventListener(chainId: number, tokenBridgeContract: Contract) {
     logger.info(`Setting up event listener for chain ${chainId}`);
 
-    try {
-      tokenBridgeContract.on('MessageSent', async (messageId: string, sender: string, target: string, data: string, nonce: bigint, event) => {
-        // Prevent concurrent processing of the same message
-        if (this.processingMessages.has(messageId)) {
-          logger.warn(`Message ${messageId} is already being processed on chain ${chainId}`);
+    const provider = this.providers.get(chainId);
+    if (!provider) {
+      logger.error(`Provider not found for chain ${chainId}`);
+      throw new Error(`Provider not found for chain ${chainId}`);
+    }
+
+    const chainConfig = this.chainConfigs.get(chainId);
+    if (!chainConfig) {
+      logger.error(`Chain configuration not found for chain ${chainId}`);
+      throw new Error(`Chain configuration not found for chain ${chainId}`);
+    }
+
+    // Function to process MessageSent events
+    const processMessageSent = async (
+      messageId: string,
+      sender: string,
+      target: string,
+      data: string,
+      nonce: bigint,
+      event: ethers.EventLog // Explicitly type as EventLog
+    ) => {
+      // Prevent concurrent processing of the same message
+      if (this.processingMessages.has(messageId)) {
+        logger.warn(`Message ${messageId} is already being processed on chain ${chainId}`);
+        return;
+      }
+      this.processingMessages.add(messageId);
+
+      try {
+        logger.info(
+          `Detected MessageSent on chain ${chainId}: messageId=${messageId}, sender=${sender}, target=${target}, nonce=${nonce}, data=${data}`
+        );
+
+        const sourceChainConfig = this.chainConfigs.get(chainId);
+        if (!sourceChainConfig) {
+          logger.error(`No configuration found for chain ${chainId}`);
           return;
         }
-        this.processingMessages.add(messageId);
 
+        const destChainId = sourceChainConfig.remoteChainId;
+        let destTokenBridgeContract = this.tokenBridgeContracts.get(destChainId);
+        let destProvider = this.providers.get(destChainId);
+        let destWallet = this.wallets.get(destChainId);
+        const destChainConfig = this.chainConfigs.get(destChainId);
+
+        if (!destTokenBridgeContract || !destProvider || !destWallet || !destChainConfig) {
+          logger.error(`Destination chain ${destChainId} not initialized`);
+          return;
+        }
+
+        const isProcessed = await destTokenBridgeContract.isMessageProcessed(messageId);
+        if (isProcessed) {
+          logger.warn(`Message ${messageId} already processed on chain ${destChainId}`);
+          return;
+        }
+
+        const sourceTokenBridgeAddress = sourceChainConfig.tokenBridgeAddress;
+        if (!sourceTokenBridgeAddress) {
+          logger.error(`Source TokenBridge address not found for chain ${chainId}`);
+          return;
+        }
+
+        if (!data || data === '0x') {
+          logger.error(`Invalid or empty data for message ${messageId} on chain ${destChainId}`);
+          await this.handleFailedMessage(chainId, messageId);
+          return;
+        }
+
+        // Validate data (expecting handleBridgedTokens)
         try {
-          logger.info(`Detected MessageSent on chain ${chainId}: messageId=${messageId}, sender=${sender}, target=${target}, nonce=${nonce}, data=${data}`);
-
-          const sourceChainConfig = this.chainConfigs.get(chainId);
-          if (!sourceChainConfig) {
-            logger.error(`No configuration found for chain ${chainId}`);
-            return;
-          }
-
-          const destChainId = sourceChainConfig.remoteChainId;
-          let destTokenBridgeContract = this.tokenBridgeContracts.get(destChainId);
-          let destProvider = this.providers.get(destChainId);
-          let destWallet = this.wallets.get(destChainId);
-          const destChainConfig = this.chainConfigs.get(destChainId);
-
-          if (!destTokenBridgeContract || !destProvider || !destWallet || !destChainConfig) {
-            logger.error(`Destination chain ${destChainId} not initialized`);
-            return;
-          }
-
-          const isProcessed = await destTokenBridgeContract.isMessageProcessed(messageId);
-          if (isProcessed) {
-            logger.warn(`Message ${messageId} already processed on chain ${destChainId}`);
-            return;
-          }
-
-          const sourceTokenBridgeAddress = sourceChainConfig.tokenBridgeAddress;
-          if (!sourceTokenBridgeAddress) {
-            logger.error(`Source TokenBridge address not found for chain ${chainId}`);
-            return;
-          }
-
-          if (!data || data === '0x') {
-            logger.error(`Invalid or empty data for message ${messageId} on chain ${destChainId}`);
+          const decodedData = handleBridgedTokensInterface.parseTransaction({ data });
+          if (!decodedData || decodedData.name !== 'handleBridgedTokens') {
+            logger.error(`Invalid data for message ${messageId}: not a handleBridgedTokens call`);
             await this.handleFailedMessage(chainId, messageId);
             return;
           }
+          const { recipient, token, value, nonce: dataNonce } = decodedData.args;
+          logger.info(
+            `Decoded handleBridgedTokens: recipient=${recipient}, token=${token}, value=${value.toString()}, nonce=${dataNonce.toString()}`
+          );
+          if (dataNonce !== nonce) {
+            logger.error(
+              `Nonce mismatch for message ${messageId}: event nonce=${nonce}, data nonce=${dataNonce}`
+            );
+            await this.handleFailedMessage(chainId, messageId);
+            return;
+          }
+        } catch (error: any) {
+          logger.error(`Failed to decode data for message ${messageId}: ${error.message}`);
+          await this.handleFailedMessage(chainId, messageId);
+          return;
+        }
 
-          // Validate data (expecting handleBridgedTokens)
-          try {
-            const decodedData = handleBridgedTokensInterface.parseTransaction({ data });
-            if (!decodedData || decodedData.name !== 'handleBridgedTokens') {
-              logger.error(`Invalid data for message ${messageId}: not a handleBridgedTokens call`);
-              await this.handleFailedMessage(chainId, messageId);
-              return;
+        // Validate remoteTokenBridge
+        const remoteTokenBridge = await destTokenBridgeContract.remoteTokenBridge();
+        if (remoteTokenBridge.toLowerCase() !== sourceTokenBridgeAddress.toLowerCase()) {
+          logger.error(
+            `Invalid remoteTokenBridge for chain ${destChainId}: expected ${sourceTokenBridgeAddress}, got ${remoteTokenBridge}`
+          );
+          await this.handleFailedMessage(chainId, messageId);
+          return;
+        }
+
+        // Validate target
+        if (target.toLowerCase() !== destChainConfig.tokenBridgeAddress.toLowerCase()) {
+          logger.error(
+            `Invalid target for message ${messageId}: target=${target}, expected ${destChainConfig.tokenBridgeAddress}`
+          );
+          await this.handleFailedMessage(chainId, messageId);
+          return;
+        }
+
+        let gasLimit: bigint;
+        try {
+          gasLimit = await destTokenBridgeContract.receiveMessage.estimateGas(
+            messageId,
+            sourceTokenBridgeAddress,
+            target,
+            data
+          );
+          gasLimit = (gasLimit * BigInt(150)) / BigInt(100); // 50% buffer
+        } catch (error: any) {
+          logger.error(
+            `Failed to estimate gas for message ${messageId} on chain ${destChainId}: ${error.message}`,
+            {
+              revertData: error.data,
+              reason: error.reason,
             }
-            const { recipient, token, value, nonce: dataNonce } = decodedData.args;
-            logger.info(`Decoded handleBridgedTokens: recipient=${recipient}, token=${token}, value=${value.toString()}, nonce=${dataNonce.toString()}`);
-            if (dataNonce !== nonce) {
-              logger.error(`Nonce mismatch for message ${messageId}: event nonce=${nonce}, data nonce=${dataNonce}`);
-              await this.handleFailedMessage(chainId, messageId);
-              return;
-            }
-          } catch (error: any) {
-            logger.error(`Failed to decode data for message ${messageId}: ${error.message}`);
-            await this.handleFailedMessage(chainId, messageId);
-            return;
+          );
+          if (error.reason?.includes('ReentrancyGuard: reentrant call')) {
+            logger.warn(`Reentrancy detected for message ${messageId}, queuing for later retry`);
+            saveFailedMessage(chainId, messageId);
           }
+          await this.handleFailedMessage(chainId, messageId);
+          return;
+        }
 
-          // Validate remoteTokenBridge
-          const remoteTokenBridge = await destTokenBridgeContract.remoteTokenBridge();
-          if (remoteTokenBridge.toLowerCase() !== sourceTokenBridgeAddress.toLowerCase()) {
-            logger.error(`Invalid remoteTokenBridge for chain ${destChainId}: expected ${sourceTokenBridgeAddress}, got ${remoteTokenBridge}`);
-            await this.handleFailedMessage(chainId, messageId);
-            return;
-          }
-
-          // Validate target
-          if (target.toLowerCase() !== destChainConfig.tokenBridgeAddress.toLowerCase()) {
-            logger.error(`Invalid target for message ${messageId}: target=${target}, expected ${destChainConfig.tokenBridgeAddress}`);
-            await this.handleFailedMessage(chainId, messageId);
-            return;
-          }
-
-          let gasLimit: bigint;
+        logger.info(`Relaying message ${messageId} to chain ${destChainId} with gasLimit ${gasLimit}`);
+        let attempts = 0;
+        const maxAttempts = 5;
+        const initialDelay = 10000; // 10 seconds
+        while (attempts < maxAttempts) {
           try {
-            gasLimit = await destTokenBridgeContract.receiveMessage.estimateGas(
+            const tx: TransactionResponse = await destTokenBridgeContract.receiveMessage(
               messageId,
               sourceTokenBridgeAddress,
               target,
-              data
+              data,
+              { gasLimit }
             );
-            gasLimit = gasLimit * BigInt(150) / BigInt(100); // 50% buffer
-          } catch (error: any) {
-            logger.error(`Failed to estimate gas for message ${messageId} on chain ${destChainId}: ${error.message}`, {
-              revertData: error.data,
-              reason: error.reason
-            });
-            if (error.reason?.includes('ReentrancyGuard: reentrant call')) {
-              logger.warn(`Reentrancy detected for message ${messageId}, queuing for later retry`);
-              saveFailedMessage(chainId, messageId);
-            }
-            await this.handleFailedMessage(chainId, messageId);
-            return;
-          }
 
-          logger.info(`Relaying message ${messageId} to chain ${destChainId} with gasLimit ${gasLimit}`);
-          let attempts = 0;
-          const maxAttempts = 5;
-          const initialDelay = 10000; // 10 seconds
-          while (attempts < maxAttempts) {
-            try {
-              const tx: TransactionResponse = await destTokenBridgeContract.receiveMessage(
-                messageId,
-                sourceTokenBridgeAddress,
-                target,
-                data,
-                { gasLimit }
+            logger.info(`Transaction sent: ${tx.hash}`);
+            const receipt = await tx.wait();
+
+            if (receipt?.status === 1) {
+              logger.info(
+                `Message ${messageId} successfully relayed to chain ${destChainId}: tx=${tx.hash}`
               );
-
-              logger.info(`Transaction sent: ${tx.hash}`);
-              const receipt = await tx.wait();
-
-              if (receipt?.status === 1) {
-                logger.info(`Message ${messageId} successfully relayed to chain ${destChainId}: tx=${tx.hash}`);
-                return;
-              } else {
-                logger.error(`Message ${messageId} relay failed: tx=${tx.hash}, receipt=${JSON.stringify(receipt)}`);
-                break;
-              }
-            } catch (error: any) {
-              attempts++;
-              const delay = initialDelay * Math.pow(2, attempts); // 10s, 20s, 40s, 80s, 160s
-              logger.warn(`Retry ${attempts}/${maxAttempts} for message ${messageId}: ${error.message}`, {
-                revertData: error.data
-              });
-              if (error.info?.responseStatus?.includes('429 Too Many Requests') && attempts === 3 && destChainConfig.fallbackRpcUrl) {
-                logger.info(`Switching to fallback RPC for chain ${destChainId}: ${destChainConfig.fallbackRpcUrl}`);
-                const newProvider = new JsonRpcProvider(destChainConfig.fallbackRpcUrl);
-                this.providers.set(destChainId, newProvider);
-                destWallet = new Wallet(config.privateKey, newProvider);
-                this.wallets.set(destChainId, destWallet);
-                destTokenBridgeContract = new Contract(destChainConfig.tokenBridgeAddress, TOKEN_BRIDGE_ABI, destWallet);
-                this.tokenBridgeContracts.set(destChainId, destTokenBridgeContract);
-              }
-              if (attempts === maxAttempts) {
-                logger.error(`Max retries reached for message ${messageId}`);
-                await this.handleFailedMessage(chainId, messageId);
-                break;
-              }
-              await new Promise(resolve => setTimeout(resolve, delay));
+              return;
+            } else {
+              logger.error(
+                `Message ${messageId} relay failed: tx=${tx.hash}, receipt=${JSON.stringify(receipt)}`
+              );
+              break;
             }
+          } catch (error: any) {
+            attempts++;
+            const delay = initialDelay * Math.pow(2, attempts); // 10s, 20s, 40s, 80s, 160s
+            logger.warn(`Retry ${attempts}/${maxAttempts} for message ${messageId}: ${error.message}`, {
+              revertData: error.data,
+            });
+            if (
+              error.info?.responseStatus?.includes('429 Too Many Requests') &&
+              attempts === 3 &&
+              destChainConfig.fallbackRpcUrl
+            ) {
+              logger.info(
+                `Switching to fallback RPC for chain ${destChainId}: ${destChainConfig.fallbackRpcUrl}`
+              );
+              const newProvider = new JsonRpcProvider(destChainConfig.fallbackRpcUrl);
+              this.providers.set(destChainId, newProvider);
+              destWallet = new Wallet(config.privateKey, newProvider);
+              this.wallets.set(destChainId, destWallet);
+              destTokenBridgeContract = new Contract(
+                destChainConfig.tokenBridgeAddress,
+                TOKEN_BRIDGE_ABI,
+                destWallet
+              );
+              this.tokenBridgeContracts.set(destChainId, destTokenBridgeContract);
+            }
+            if (attempts === maxAttempts) {
+              logger.error(`Max retries reached for message ${messageId}`);
+              await this.handleFailedMessage(chainId, messageId);
+              break;
+            }
+            await new Promise((resolve) => setTimeout(resolve, delay));
           }
+        }
+      } catch (error: any) {
+        logger.error(`Error processing MessageSent for messageId ${messageId}: ${error.message}`, {
+          error: JSON.stringify(error),
+          transaction: error.transaction,
+          receipt: error.receipt,
+          revertData: error.data,
+        });
+        await this.handleFailedMessage(chainId, messageId);
+      } finally {
+        this.processingMessages.delete(messageId);
+        // Add a short delay to avoid rapid concurrent processing
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    };
+
+    // Function to set up or refresh the event listener
+    const setupFilter = async () => {
+      try {
+        // Remove existing listeners to avoid duplicates
+        tokenBridgeContract.removeAllListeners('MessageSent');
+
+        // Set up the event listener
+        tokenBridgeContract.on('MessageSent', processMessageSent);
+        logger.info(`Event listener (filter) active for chain ${chainId}`);
+
+        // Handle provider errors (e.g., filter not found)
+        provider.on('error', async (error: any) => {
+          if (
+            error?.error?.message?.includes('filter not found') ||
+            error?.message?.includes('filter not found')
+          ) {
+            logger.warn(
+              `Filter not found for chain ${chainId}, recreating filter: ${JSON.stringify(error)}`
+            );
+            await setupFilter(); // Recreate the filter
+          } else {
+            logger.error(`Provider error for chain ${chainId}: ${JSON.stringify(error)}`);
+          }
+        });
+      } catch (error: any) {
+        logger.error(`Failed to set up filter for chain ${chainId}: ${error.message}`);
+        throw error;
+      }
+    };
+
+    // Function to poll for events as a fallback
+    const startPolling = async () => {
+      const POLLING_INTERVAL = 60000; // Poll every 60 seconds
+      let lastBlockProcessed = await provider.getBlockNumber();
+
+      const pollEvents = async () => {
+        try {
+          const currentBlock = await provider.getBlockNumber();
+          if (currentBlock <= lastBlockProcessed) {
+            return; // No new blocks to process
+          }
+
+          logger.info(
+            `Polling for MessageSent events on chain ${chainId} from block ${lastBlockProcessed + 1} to ${currentBlock}`
+          );
+
+          const filter = tokenBridgeContract.filters.MessageSent();
+          const events = await tokenBridgeContract.queryFilter(
+            filter,
+            lastBlockProcessed + 1,
+            currentBlock
+          );
+
+          for (const event of events) {
+            let args;
+            if ('args' in event) {
+              args = event.args; // EventLog case
+            } else {
+              // Decode Log manually
+              const parsedLog = tokenBridgeContract.interface.parseLog(event);
+              if (!parsedLog) {
+                logger.error(`Failed to parse log for event on chain ${chainId}`);
+                continue;
+              }
+              args = parsedLog.args;
+            }
+            const { messageId, sender, target, data, nonce } = args;
+            await processMessageSent(messageId, sender, target, data, nonce, event as ethers.EventLog);
+          }
+
+          lastBlockProcessed = currentBlock;
         } catch (error: any) {
-          logger.error(`Error processing MessageSent for messageId ${messageId}: ${error.message}`, {
-            error: JSON.stringify(error),
-            transaction: error.transaction,
-            receipt: error.receipt,
-            revertData: error.data
-          });
-          await this.handleFailedMessage(chainId, messageId);
-        } finally {
-          this.processingMessages.delete(messageId);
-          // Add a short delay to avoid rapid concurrent processing
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          logger.error(`Polling error on chain ${chainId}: ${error.message}`);
+          if (
+            error?.error?.message?.includes('filter not found') ||
+            error?.message?.includes('filter not found')
+          ) {
+            logger.warn(`Filter not found during polling, recreating filter`);
+            await setupFilter();
+          }
+        }
+      };
+
+      // Run polling loop
+      const pollingLoop = async () => {
+        while (this.isRunning) {
+          await pollEvents();
+          await new Promise((resolve) => setTimeout(resolve, POLLING_INTERVAL));
+        }
+      };
+
+      pollingLoop().catch((error) => {
+        logger.error(`Polling loop crashed on chain ${chainId}: ${error.message}`);
+        // Restart polling after a delay
+        setTimeout(() => startPolling(), 10000);
+      });
+    };
+
+    try {
+      // Set up the initial filter
+      await setupFilter();
+
+      // Start polling as a fallback
+      await startPolling();
+
+      // Switch to fallback RPC if primary RPC fails consistently
+      let rpcFailureCount = 0;
+      const maxRpcFailures = 5;
+      provider.on('error', async (error: any) => {
+        if (
+          error?.info?.responseStatus?.includes('429 Too Many Requests') ||
+          error?.message?.includes('connection')
+        ) {
+          rpcFailureCount++;
+          logger.warn(
+            `RPC failure ${rpcFailureCount}/${maxRpcFailures} for chain ${chainId}: ${JSON.stringify(
+              error
+            )}`
+          );
+
+          if (rpcFailureCount >= maxRpcFailures && chainConfig.fallbackRpcUrl) {
+            logger.info(`Switching to fallback RPC for chain ${chainId}: ${chainConfig.fallbackRpcUrl}`);
+            const newProvider = new JsonRpcProvider(chainConfig.fallbackRpcUrl);
+            this.providers.set(chainId, newProvider);
+            const newWallet = new Wallet(config.privateKey, newProvider);
+            this.wallets.set(chainId, newWallet);
+            const newTokenBridgeContract = new Contract(
+              chainConfig.tokenBridgeAddress,
+              TOKEN_BRIDGE_ABI,
+              newWallet
+            );
+            this.tokenBridgeContracts.set(chainId, newTokenBridgeContract);
+
+            // Reset failure count and set up listener on new provider
+            rpcFailureCount = 0;
+            await setupFilter();
+            logger.info(`Switched to fallback RPC and recreated listener for chain ${chainId}`);
+          }
         }
       });
-
-      logger.info(`Event listener active for chain ${chainId}`);
     } catch (error: any) {
       logger.error(`Failed to set up event listener for chain ${chainId}: ${error.message}`);
       throw error;
