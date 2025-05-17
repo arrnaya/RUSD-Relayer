@@ -22,17 +22,15 @@ const logger = winston.createLogger({
 
 // TokenBridge contract ABI
 const TOKEN_BRIDGE_ABI = [
-  // Events
   'event MessageSent(bytes32 indexed messageId, address indexed sender, address indexed target, bytes data, uint256 nonce)',
   'event MessageReceived(bytes32 indexed messageId, address indexed sender, address indexed target, bytes data, uint256 nonce)',
   'event TokensLocked(bytes32 indexed messageId, address indexed sender, address indexed recipient, address localToken, address remoteToken, uint256 value, uint256 nonce)',
   'event FailedMessageFixed(bytes32 indexed messageId, address indexed recipient, address tokenAddress, uint256 value)',
-  // Functions
-  'function receiveMessage(bytes32 messageId, address sender, address target, bytes calldata data) external',
+  'function receiveMessage(bytes32 messageId, uint64 chainId, address sender, address target, bytes calldata data) external',
   'function fixFailedMessage(bytes32 messageId) external',
   'function isMessageProcessed(bytes32 messageId) external view returns (bool)',
   'function isMessageFixed(bytes32 messageId) external view returns (bool)',
-  'function remoteTokenBridge() external view returns (address)',
+  'function getRemoteTokenBridge(uint64 chainId) external view returns (address)',
   'function initialized() external view returns (bool)',
   'function hasRole(bytes32 role, address account) external view returns (bool)',
   'function paused() external view returns (bool)'
@@ -51,11 +49,16 @@ interface ChainConfig {
   fallbackRpcUrl?: string;
   tokenBridgeAddress: string;
   remoteChainId: number;
+  pollingIntervalMs?: number; // Polling interval in ms
+  gasLimitBufferPercent?: number; // Gas limit buffer percentage
 }
 
 interface RelayerConfig {
   privateKey: string;
   chains: ChainConfig[];
+  maxRetries?: number; // Max transaction retries
+  failedMessageTtlMs?: number; // TTL for failed messages
+  rateLimitBackoffMs?: number; // Initial backoff for 429 errors
 }
 
 // Load configuration
@@ -63,17 +66,25 @@ const configPath = path.resolve(__dirname, 'relayer.config.json');
 const config: RelayerConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 
 // Validate configuration
-if (!config.privateKey || config.chains.length !== 2) {
-  logger.error('Invalid configuration: privateKey and exactly two chains are required');
+if (!config.privateKey || config.chains.length < 1) {
+  logger.error('Invalid configuration: privateKey and at least one chain are required');
   process.exit(1);
+}
+for (const chain of config.chains) {
+  if (!chain.tokenBridgeAddress || !chain.remoteChainId || !config.chains.some(c => c.chainId === chain.remoteChainId)) {
+    logger.error(`Invalid configuration for chain ${chain.chainId}: missing tokenBridgeAddress, remoteChainId, or invalid remoteChainId`);
+    process.exit(1);
+  }
 }
 
 // Queue for failed messages
 const queueFile = path.resolve(__dirname, 'failedMessages.json');
 const saveFailedMessage = (chainId: number, messageId: string) => {
   const queue = fs.existsSync(queueFile) ? JSON.parse(fs.readFileSync(queueFile, 'utf-8')) : [];
-  queue.push({ chainId, messageId, timestamp: Date.now() });
-  fs.writeFileSync(queueFile, JSON.stringify(queue));
+  if (!queue.some((entry: any) => entry.chainId === chainId && entry.messageId === messageId)) {
+    queue.push({ chainId, messageId, timestamp: Date.now() });
+    fs.writeFileSync(queueFile, JSON.stringify(queue));
+  }
 };
 
 // Relayer class
@@ -83,7 +94,11 @@ class Relayer {
   private tokenBridgeContracts: Map<number, Contract> = new Map();
   private chainConfigs: Map<number, ChainConfig> = new Map();
   private isRunning: boolean = false;
-  private processingMessages: Set<string> = new Set(); // Track messages being processed
+  private processingMessages: Set<string> = new Set();
+  private maxRetries: number = config.maxRetries || 3;
+  private failedMessageTtlMs: number = config.failedMessageTtlMs || 24 * 60 * 60 * 1000;
+  private rateLimitBackoffMs: number = config.rateLimitBackoffMs || 60000; // 1 minute initial backoff
+  private rateLimitBackoff: Map<number, number> = new Map(); // Track backoff per chain
 
   constructor() { }
 
@@ -94,48 +109,43 @@ class Relayer {
         logger.info(`Initializing chain ${chain.chainId}...`);
         let provider = new JsonRpcProvider(chain.rpcUrl);
 
-        // Test provider connectivity
-        try {
-          await provider.getNetwork();
-          logger.info(`Connected to RPC for chain ${chain.chainId}: ${chain.rpcUrl}`);
-        } catch (error: any) {
-          logger.warn(`Primary RPC failed for chain ${chain.chainId}: ${error.message}`);
-          if (chain.fallbackRpcUrl) {
-            logger.info(`Switching to fallback RPC: ${chain.fallbackRpcUrl}`);
-            provider = new JsonRpcProvider(chain.fallbackRpcUrl);
-            await provider.getNetwork();
-            logger.info(`Connected to fallback RPC for chain ${chain.chainId}: ${chain.fallbackRpcUrl}`);
-          } else {
-            throw new Error(`No fallback RPC available for chain ${chain.chainId}`);
-          }
+        // Validate chain ID
+        const network = await provider.getNetwork();
+        if (Number(network.chainId) !== chain.chainId) {
+          logger.error(`Chain ID mismatch for chain ${chain.chainId}: expected ${chain.chainId}, got ${network.chainId}`);
+          throw new Error('Chain ID mismatch');
         }
+        logger.info(`Connected to RPC for chain ${chain.chainId}: ${chain.rpcUrl}`);
 
         const wallet = new Wallet(config.privateKey, provider);
         const tokenBridgeContract = new Contract(chain.tokenBridgeAddress, TOKEN_BRIDGE_ABI, wallet);
 
-        // Validate contract state
-        const initialized = await tokenBridgeContract.initialized();
+        // Batch contract state checks
+        const [initialized, remoteTokenBridge, hasRelayerRole, isPaused] = await Promise.all([
+          tokenBridgeContract.initialized(),
+          tokenBridgeContract.getRemoteTokenBridge(chain.remoteChainId),
+          tokenBridgeContract.hasRole(ethers.id('RELAYER_ROLE'), wallet.address),
+          tokenBridgeContract.paused()
+        ]);
+
         if (!initialized) {
           logger.error(`TokenBridge contract on chain ${chain.chainId} is not initialized`);
           throw new Error('TokenBridge contract not initialized');
         }
 
-        const remoteTokenBridge = await tokenBridgeContract.remoteTokenBridge();
         const expectedRemoteTokenBridge = config.chains.find(c => c.chainId === chain.remoteChainId)?.tokenBridgeAddress;
         if (remoteTokenBridge.toLowerCase() !== expectedRemoteTokenBridge?.toLowerCase()) {
           logger.error(`TokenBridge on chain ${chain.chainId} has incorrect remoteTokenBridge: expected ${expectedRemoteTokenBridge}, got ${remoteTokenBridge}`);
           throw new Error('Incorrect remoteTokenBridge');
         }
 
-        const hasRelayerRole = await tokenBridgeContract.hasRole(ethers.id('RELAYER_ROLE'), wallet.address);
         if (!hasRelayerRole) {
           logger.error(`Wallet ${wallet.address} does not have RELAYER_ROLE on chain ${chain.chainId}`);
           throw new Error('Missing RELAYER_ROLE');
         }
 
-        const isPaused = await tokenBridgeContract.paused();
         if (isPaused) {
-          logger.error(`TokenBridge contract on chain ${chain.chainId} is paused`);
+          logger.error(`TokenBridge contract on chain ${chain.chainId} l is paused`);
           throw new Error('TokenBridge contract paused');
         }
 
@@ -162,16 +172,11 @@ class Relayer {
     this.isRunning = true;
     logger.info('Starting relayer...');
 
-    try {
-      logger.info('Setting up event listeners...');
-      for (const [chainId, tokenBridgeContract] of this.tokenBridgeContracts) {
-        logger.info(`Processing chain ${chainId} for event listener setup`);
-        await this.setupEventListener(chainId, tokenBridgeContract);
-      }
-      logger.info('All event listeners set up');
-    } catch (error: any) {
-      logger.error(`Failed to set up event listeners: ${error.message}`);
-      throw error;
+    // Start failed message retry loop (every 12 hours for low usage)
+    setInterval(() => this.retryFailedMessages(), 12 * 60 * 60 * 1000);
+
+    for (const [chainId, tokenBridgeContract] of this.tokenBridgeContracts) {
+      await this.setupEventListener(chainId, tokenBridgeContract);
     }
 
     process.on('SIGINT', this.shutdown.bind(this));
@@ -180,29 +185,21 @@ class Relayer {
 
   private async setupEventListener(chainId: number, tokenBridgeContract: Contract) {
     logger.info(`Setting up event listener for chain ${chainId}`);
-
     const provider = this.providers.get(chainId);
-    if (!provider) {
-      logger.error(`Provider not found for chain ${chainId}`);
-      throw new Error(`Provider not found for chain ${chainId}`);
-    }
-
     const chainConfig = this.chainConfigs.get(chainId);
-    if (!chainConfig) {
-      logger.error(`Chain configuration not found for chain ${chainId}`);
-      throw new Error(`Chain configuration not found for chain ${chainId}`);
+    if (!provider || !chainConfig) {
+      logger.error(`Provider or config not found for chain ${chainId}`);
+      throw new Error(`Setup failed for chain ${chainId}`);
     }
 
-    // Function to process MessageSent events
     const processMessageSent = async (
       messageId: string,
       sender: string,
       target: string,
       data: string,
       nonce: bigint,
-      event: ethers.EventLog // Explicitly type as EventLog
+      event: ethers.EventLog
     ) => {
-      // Prevent concurrent processing of the same message
       if (this.processingMessages.has(messageId)) {
         logger.warn(`Message ${messageId} is already being processed on chain ${chainId}`);
         return;
@@ -210,24 +207,20 @@ class Relayer {
       this.processingMessages.add(messageId);
 
       try {
-        logger.info(
-          `Detected MessageSent on chain ${chainId}: messageId=${messageId}, sender=${sender}, target=${target}, nonce=${nonce}, data=${data}`
-        );
+        logger.info(`Detected MessageSent on chain ${chainId}: messageId=${messageId}, sender=${sender}, target=${target}, nonce=${nonce}`);
 
-        const sourceChainConfig = this.chainConfigs.get(chainId);
-        if (!sourceChainConfig) {
-          logger.error(`No configuration found for chain ${chainId}`);
+        const destChainId = chainConfig.remoteChainId;
+        const destTokenBridgeContract = this.tokenBridgeContracts.get(destChainId);
+        const destChainConfig = this.chainConfigs.get(destChainId);
+        if (!destTokenBridgeContract || !destChainConfig) {
+          logger.error(`Destination chain ${destChainId} not initialized`);
           return;
         }
 
-        const destChainId = sourceChainConfig.remoteChainId;
-        let destTokenBridgeContract = this.tokenBridgeContracts.get(destChainId);
-        let destProvider = this.providers.get(destChainId);
-        let destWallet = this.wallets.get(destChainId);
-        const destChainConfig = this.chainConfigs.get(destChainId);
-
-        if (!destTokenBridgeContract || !destProvider || !destWallet || !destChainConfig) {
-          logger.error(`Destination chain ${destChainId} not initialized`);
+        // Check if destination contract is paused
+        if (await destTokenBridgeContract.paused()) {
+          logger.warn(`Destination contract on chain ${destChainId} is paused, queuing message ${messageId}`);
+          saveFailedMessage(chainId, messageId);
           return;
         }
 
@@ -237,34 +230,18 @@ class Relayer {
           return;
         }
 
-        const sourceTokenBridgeAddress = sourceChainConfig.tokenBridgeAddress;
-        if (!sourceTokenBridgeAddress) {
-          logger.error(`Source TokenBridge address not found for chain ${chainId}`);
-          return;
-        }
-
-        if (!data || data === '0x') {
-          logger.error(`Invalid or empty data for message ${messageId} on chain ${destChainId}`);
+        if (!data || data === '0x' || data.length < 4) {
+          logger.error(`Invalid data for message ${messageId}: ${data}`);
           await this.handleFailedMessage(chainId, messageId);
           return;
         }
 
-        // Validate data (expecting handleBridgedTokens)
+        // Decode and validate data
+        let decodedData;
         try {
-          const decodedData = handleBridgedTokensInterface.parseTransaction({ data });
+          decodedData = handleBridgedTokensInterface.parseTransaction({ data });
           if (!decodedData || decodedData.name !== 'handleBridgedTokens') {
             logger.error(`Invalid data for message ${messageId}: not a handleBridgedTokens call`);
-            await this.handleFailedMessage(chainId, messageId);
-            return;
-          }
-          const { recipient, token, value, nonce: dataNonce } = decodedData.args;
-          logger.info(
-            `Decoded handleBridgedTokens: recipient=${recipient}, token=${token}, value=${value.toString()}, nonce=${dataNonce.toString()}`
-          );
-          if (dataNonce !== nonce) {
-            logger.error(
-              `Nonce mismatch for message ${messageId}: event nonce=${nonce}, data nonce=${dataNonce}`
-            );
             await this.handleFailedMessage(chainId, messageId);
             return;
           }
@@ -274,21 +251,9 @@ class Relayer {
           return;
         }
 
-        // Validate remoteTokenBridge
-        const remoteTokenBridge = await destTokenBridgeContract.remoteTokenBridge();
-        if (remoteTokenBridge.toLowerCase() !== sourceTokenBridgeAddress.toLowerCase()) {
-          logger.error(
-            `Invalid remoteTokenBridge for chain ${destChainId}: expected ${sourceTokenBridgeAddress}, got ${remoteTokenBridge}`
-          );
-          await this.handleFailedMessage(chainId, messageId);
-          return;
-        }
-
         // Validate target
         if (target.toLowerCase() !== destChainConfig.tokenBridgeAddress.toLowerCase()) {
-          logger.error(
-            `Invalid target for message ${messageId}: target=${target}, expected ${destChainConfig.tokenBridgeAddress}`
-          );
+          logger.error(`Invalid target for message ${messageId}: expected ${destChainConfig.tokenBridgeAddress}, got ${target}`);
           await this.handleFailedMessage(chainId, messageId);
           return;
         }
@@ -297,271 +262,192 @@ class Relayer {
         try {
           gasLimit = await destTokenBridgeContract.receiveMessage.estimateGas(
             messageId,
-            sourceTokenBridgeAddress,
+            chainId,
+            chainConfig.tokenBridgeAddress,
             target,
             data
           );
-          gasLimit = (gasLimit * BigInt(150)) / BigInt(100); // 50% buffer
+          const bufferPercent = chainConfig.gasLimitBufferPercent || 20;
+          gasLimit = (gasLimit * BigInt(100 + bufferPercent)) / BigInt(100);
         } catch (error: any) {
-          logger.error(
-            `Failed to estimate gas for message ${messageId} on chain ${destChainId}: ${error.message}`,
-            {
-              revertData: error.data,
-              reason: error.reason,
-            }
-          );
+          logger.error(`Failed to estimate gas for message ${messageId}: ${error.message}`);
           if (error.reason?.includes('ReentrancyGuard: reentrant call')) {
-            logger.warn(`Reentrancy detected for message ${messageId}, queuing for later retry`);
             saveFailedMessage(chainId, messageId);
           }
           await this.handleFailedMessage(chainId, messageId);
           return;
         }
 
-        logger.info(`Relaying message ${messageId} to chain ${destChainId} with gasLimit ${gasLimit}`);
         let attempts = 0;
-        const maxAttempts = 5;
-        const initialDelay = 10000; // 10 seconds
-        while (attempts < maxAttempts) {
+        const initialDelay = 10000;
+        while (attempts < this.maxRetries) {
           try {
             const tx: TransactionResponse = await destTokenBridgeContract.receiveMessage(
               messageId,
-              sourceTokenBridgeAddress,
+              chainId,
+              chainConfig.tokenBridgeAddress,
               target,
               data,
               { gasLimit }
             );
-
             logger.info(`Transaction sent: ${tx.hash}`);
             const receipt = await tx.wait();
-
             if (receipt?.status === 1) {
-              logger.info(
-                `Message ${messageId} successfully relayed to chain ${destChainId}: tx=${tx.hash}`
-              );
+              logger.info(`Message ${messageId} relayed to chain ${destChainId}: tx=${tx.hash}`);
               return;
-            } else {
-              logger.error(
-                `Message ${messageId} relay failed: tx=${tx.hash}, receipt=${JSON.stringify(receipt)}`
-              );
-              break;
             }
           } catch (error: any) {
             attempts++;
-            const delay = initialDelay * Math.pow(2, attempts); // 10s, 20s, 40s, 80s, 160s
-            logger.warn(`Retry ${attempts}/${maxAttempts} for message ${messageId}: ${error.message}`, {
-              revertData: error.data,
-            });
-            if (
-              error.info?.responseStatus?.includes('429 Too Many Requests') &&
-              attempts === 3 &&
-              destChainConfig.fallbackRpcUrl
-            ) {
-              logger.info(
-                `Switching to fallback RPC for chain ${destChainId}: ${destChainConfig.fallbackRpcUrl}`
-              );
-              const newProvider = new JsonRpcProvider(destChainConfig.fallbackRpcUrl);
-              this.providers.set(destChainId, newProvider);
-              destWallet = new Wallet(config.privateKey, newProvider);
-              this.wallets.set(destChainId, destWallet);
-              destTokenBridgeContract = new Contract(
-                destChainConfig.tokenBridgeAddress,
-                TOKEN_BRIDGE_ABI,
-                destWallet
-              );
-              this.tokenBridgeContracts.set(destChainId, destTokenBridgeContract);
+            const delay = initialDelay * Math.pow(2, attempts);
+            logger.warn(`Retry ${attempts}/${this.maxRetries} for message ${messageId}: ${error.message}`);
+            if (error.message.includes('Too Many Requests') && chainConfig.fallbackRpcUrl) {
+              logger.info(`Switching to fallback RPC for chain ${destChainId}: ${chainConfig.fallbackRpcUrl}`);
+              await this.switchToFallbackRpc(destChainId);
+              return; // Retry with new provider
             }
-            if (attempts === maxAttempts) {
+            if (attempts === this.maxRetries) {
               logger.error(`Max retries reached for message ${messageId}`);
               await this.handleFailedMessage(chainId, messageId);
               break;
             }
-            await new Promise((resolve) => setTimeout(resolve, delay));
+            await new Promise(resolve => setTimeout(resolve, delay));
           }
         }
-      } catch (error: any) {
-        logger.error(`Error processing MessageSent for messageId ${messageId}: ${error.message}`, {
-          error: JSON.stringify(error),
-          transaction: error.transaction,
-          receipt: error.receipt,
-          revertData: error.data,
-        });
-        await this.handleFailedMessage(chainId, messageId);
       } finally {
         this.processingMessages.delete(messageId);
-        // Add a short delay to avoid rapid concurrent processing
-        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     };
 
-    // Function to set up or refresh the event listener
     const setupFilter = async () => {
       try {
-        // Remove existing listeners to avoid duplicates
         tokenBridgeContract.removeAllListeners('MessageSent');
-
-        // Set up the event listener
         tokenBridgeContract.on('MessageSent', processMessageSent);
-        logger.info(`Event listener (filter) active for chain ${chainId}`);
-
-        // Handle provider errors (e.g., filter not found)
-        provider.on('error', async (error: any) => {
-          if (
-            error?.error?.message?.includes('filter not found') ||
-            error?.message?.includes('filter not found')
-          ) {
-            logger.warn(
-              `Filter not found for chain ${chainId}, recreating filter: ${JSON.stringify(error)}`
-            );
-            await setupFilter(); // Recreate the filter
-          } else {
-            logger.error(`Provider error for chain ${chainId}: ${JSON.stringify(error)}`);
-          }
-        });
+        logger.info(`Event listener active for chain ${chainId}`);
       } catch (error: any) {
         logger.error(`Failed to set up filter for chain ${chainId}: ${error.message}`);
-        throw error;
+        if (chainConfig.fallbackRpcUrl) {
+          logger.info(`Switching to fallback RPC for chain ${chainId}: ${chainConfig.fallbackRpcUrl}`);
+          await this.switchToFallbackRpc(chainId);
+          await setupFilter();
+        } else {
+          throw error;
+        }
       }
     };
 
-    // Function to poll for events as a fallback
     const startPolling = async () => {
-      const POLLING_INTERVAL = 60000; // Poll every 60 seconds
+      const pollingInterval = chainConfig.pollingIntervalMs || 600000; // 10 minutes
       let lastBlockProcessed = await provider.getBlockNumber();
+      let backoffCount = 0;
 
       const pollEvents = async () => {
         try {
-          const currentBlock = await provider.getBlockNumber();
-          if (currentBlock <= lastBlockProcessed) {
-            return; // No new blocks to process
+          // Check for rate limit backoff
+          const backoffUntil = this.rateLimitBackoff.get(chainId) || 0;
+          if (Date.now() < backoffUntil) {
+            logger.debug(`Chain ${chainId} in rate limit backoff until ${new Date(backoffUntil).toISOString()}`);
+            return;
           }
 
-          logger.info(
-            `Polling for MessageSent events on chain ${chainId} from block ${lastBlockProcessed + 1} to ${currentBlock}`
-          );
+          logger.debug(`Polling chain ${chainId}: fetching block number`);
+          const currentBlock = await provider.getBlockNumber();
+          if (currentBlock <= lastBlockProcessed) {
+            logger.debug(`No new blocks on chain ${chainId}: current=${currentBlock}, last=${lastBlockProcessed}`);
+            return;
+          }
+
+          const maxBlockRange = 50;
+          const toBlock = Math.min(currentBlock, lastBlockProcessed + maxBlockRange);
+          logger.info(`Polling chain ${chainId} from block ${lastBlockProcessed + 1} to ${toBlock}`);
 
           const filter = tokenBridgeContract.filters.MessageSent();
-          const events = await tokenBridgeContract.queryFilter(
-            filter,
-            lastBlockProcessed + 1,
-            currentBlock
-          );
+          const events = await tokenBridgeContract.queryFilter(filter, lastBlockProcessed + 1, toBlock);
+          logger.debug(`Found ${events.length} MessageSent events on chain ${chainId}`);
 
           for (const event of events) {
-            let args;
-            if ('args' in event) {
-              args = event.args; // EventLog case
-            } else {
-              // Decode Log manually
-              const parsedLog = tokenBridgeContract.interface.parseLog(event);
-              if (!parsedLog) {
-                logger.error(`Failed to parse log for event on chain ${chainId}`);
-                continue;
-              }
-              args = parsedLog.args;
-            }
+            const args = 'args' in event ? event.args : tokenBridgeContract.interface.parseLog(event)?.args;
+            if (!args) continue;
             const { messageId, sender, target, data, nonce } = args;
             await processMessageSent(messageId, sender, target, data, nonce, event as ethers.EventLog);
           }
 
-          lastBlockProcessed = currentBlock;
+          lastBlockProcessed = toBlock;
+          backoffCount = 0; // Reset backoff on success
         } catch (error: any) {
           logger.error(`Polling error on chain ${chainId}: ${error.message}`);
-          if (
-            error?.error?.message?.includes('filter not found') ||
-            error?.message?.includes('filter not found')
-          ) {
-            logger.warn(`Filter not found during polling, recreating filter`);
-            await setupFilter();
+          if (error.message.includes('Too Many Requests') || error.code === -32005) {
+            backoffCount++;
+            const backoffMs = this.rateLimitBackoffMs * Math.pow(2, backoffCount - 1);
+            const backoffUntil = Date.now() + backoffMs;
+            this.rateLimitBackoff.set(chainId, backoffUntil);
+            logger.warn(`Rate limit hit on chain ${chainId}, backing off for ${backoffMs / 1000}s until ${new Date(backoffUntil).toISOString()}`);
+            if (chainConfig.fallbackRpcUrl) {
+              logger.info(`Switching to fallback RPC for chain ${chainId}: ${chainConfig.fallbackRpcUrl}`);
+              await this.switchToFallbackRpc(chainId);
+            }
           }
         }
       };
 
-      // Run polling loop
-      const pollingLoop = async () => {
-        while (this.isRunning) {
-          await pollEvents();
-          await new Promise((resolve) => setTimeout(resolve, POLLING_INTERVAL));
-        }
-      };
-
-      pollingLoop().catch((error) => {
-        logger.error(`Polling loop crashed on chain ${chainId}: ${error.message}`);
-        // Restart polling after a delay
-        setTimeout(() => startPolling(), 10000);
-      });
+      while (this.isRunning) {
+        await pollEvents();
+        await new Promise(resolve => setTimeout(resolve, pollingInterval));
+      }
     };
 
+    await setupFilter();
+    startPolling().catch(error => {
+      logger.error(`Polling loop crashed on chain ${chainId}: ${error.message}`);
+      setTimeout(() => startPolling(), 60000);
+    });
+  }
+
+  private async switchToFallbackRpc(chainId: number) {
+    const chainConfig = this.chainConfigs.get(chainId);
+    if (!chainConfig?.fallbackRpcUrl) {
+      logger.error(`No fallback RPC available for chain ${chainId}`);
+      return;
+    }
+
     try {
-      // Set up the initial filter
-      await setupFilter();
+      const provider = new JsonRpcProvider(chainConfig.fallbackRpcUrl);
+      const network = await provider.getNetwork();
+      if (Number(network.chainId) !== chainId) {
+        logger.error(`Fallback RPC chain ID mismatch for chain ${chainId}: got ${network.chainId}`);
+        return;
+      }
 
-      // Start polling as a fallback
-      await startPolling();
+      const wallet = new Wallet(config.privateKey, provider);
+      const tokenBridgeContract = new Contract(chainConfig.tokenBridgeAddress, TOKEN_BRIDGE_ABI, wallet);
 
-      // Switch to fallback RPC if primary RPC fails consistently
-      let rpcFailureCount = 0;
-      const maxRpcFailures = 5;
-      provider.on('error', async (error: any) => {
-        if (
-          error?.info?.responseStatus?.includes('429 Too Many Requests') ||
-          error?.message?.includes('connection')
-        ) {
-          rpcFailureCount++;
-          logger.warn(
-            `RPC failure ${rpcFailureCount}/${maxRpcFailures} for chain ${chainId}: ${JSON.stringify(
-              error
-            )}`
-          );
-
-          if (rpcFailureCount >= maxRpcFailures && chainConfig.fallbackRpcUrl) {
-            logger.info(`Switching to fallback RPC for chain ${chainId}: ${chainConfig.fallbackRpcUrl}`);
-            const newProvider = new JsonRpcProvider(chainConfig.fallbackRpcUrl);
-            this.providers.set(chainId, newProvider);
-            const newWallet = new Wallet(config.privateKey, newProvider);
-            this.wallets.set(chainId, newWallet);
-            const newTokenBridgeContract = new Contract(
-              chainConfig.tokenBridgeAddress,
-              TOKEN_BRIDGE_ABI,
-              newWallet
-            );
-            this.tokenBridgeContracts.set(chainId, newTokenBridgeContract);
-
-            // Reset failure count and set up listener on new provider
-            rpcFailureCount = 0;
-            await setupFilter();
-            logger.info(`Switched to fallback RPC and recreated listener for chain ${chainId}`);
-          }
-        }
-      });
+      this.providers.set(chainId, provider);
+      this.wallets.set(chainId, wallet);
+      this.tokenBridgeContracts.set(chainId, tokenBridgeContract);
+      logger.info(`Switched to fallback RPC for chain ${chainId}: ${chainConfig.fallbackRpcUrl}`);
     } catch (error: any) {
-      logger.error(`Failed to set up event listener for chain ${chainId}: ${error.message}`);
-      throw error;
+      logger.error(`Failed to switch to fallback RPC for chain ${chainId}: ${error.message}`);
     }
   }
 
   private async handleFailedMessage(chainId: number, messageId: string) {
     try {
-      logger.info(`Handling failed message ${messageId} on source chain ${chainId}`);
-
-      let sourceTokenBridgeContract = this.tokenBridgeContracts.get(chainId);
-      let sourceProvider = this.providers.get(chainId);
-      let sourceWallet = this.wallets.get(chainId);
+      const sourceTokenBridgeContract = this.tokenBridgeContracts.get(chainId);
       const sourceChainConfig = this.chainConfigs.get(chainId);
-
-      if (!sourceTokenBridgeContract || !sourceProvider || !sourceWallet || !sourceChainConfig) {
-        logger.error(`Source chain ${chainId} not initialized for fixing message ${messageId}`);
+      if (!sourceTokenBridgeContract || !sourceChainConfig) {
+        logger.error(`Source chain ${chainId} not initialized for message ${messageId}`);
         saveFailedMessage(chainId, messageId);
         return;
       }
 
-      const isFixed = await sourceTokenBridgeContract.isMessageFixed(messageId);
+      const [isFixed, isProcessed] = await Promise.all([
+        sourceTokenBridgeContract.isMessageFixed(messageId),
+        sourceTokenBridgeContract.isMessageProcessed(messageId)
+      ]);
+
       if (isFixed) {
         logger.warn(`Message ${messageId} already fixed on chain ${chainId}`);
         return;
       }
-
-      const isProcessed = await sourceTokenBridgeContract.isMessageProcessed(messageId);
       if (isProcessed) {
         logger.warn(`Message ${messageId} was processed, cannot fix on chain ${chainId}`);
         return;
@@ -570,65 +456,68 @@ class Relayer {
       let gasLimit: bigint;
       try {
         gasLimit = await sourceTokenBridgeContract.fixFailedMessage.estimateGas(messageId);
-        gasLimit = gasLimit * BigInt(150) / BigInt(100); // 50% buffer
+        const bufferPercent = sourceChainConfig.gasLimitBufferPercent || 20;
+        gasLimit = (gasLimit * BigInt(100 + bufferPercent)) / BigInt(100);
       } catch (error: any) {
-        logger.error(`Failed to estimate gas for fixFailedMessage ${messageId} on chain ${chainId}: ${error.message}`);
+        logger.error(`Failed to estimate gas for fixFailedMessage ${messageId}: ${error.message}`);
         saveFailedMessage(chainId, messageId);
         return;
       }
 
       let attempts = 0;
-      const maxAttempts = 5;
-      const initialDelay = 10000; // 10 seconds
-      while (attempts < maxAttempts) {
+      const initialDelay = 10000;
+      while (attempts < this.maxRetries) {
         try {
           const tx: TransactionResponse = await sourceTokenBridgeContract.fixFailedMessage(messageId, { gasLimit });
-          logger.info(`fixFailedMessage transaction sent for message ${messageId}: ${tx.hash}`);
-
+          logger.info(`fixFailedMessage sent for message ${messageId}: ${tx.hash}`);
           const receipt = await tx.wait();
           if (receipt?.status === 1) {
-            logger.info(`Message ${messageId} successfully fixed on chain ${chainId}: tx=${tx.hash}`);
-            return;
-          } else {
-            logger.error(`fixFailedMessage failed for message ${messageId}: tx=${tx.hash}, receipt=${JSON.stringify(receipt)}`);
-            saveFailedMessage(chainId, messageId);
+            logger.info(`Message ${messageId} fixed on chain ${chainId}: tx=${tx.hash}`);
             return;
           }
         } catch (error: any) {
           attempts++;
-          const delay = initialDelay * Math.pow(2, attempts); // 10s, 20s, 40s, 80s, 160s
-          logger.warn(`Retry ${attempts}/${maxAttempts} for fixFailedMessage ${messageId}: ${error.message}`, {
-            revertData: error.data
-          });
-          if (error.info?.responseStatus?.includes('429 Too Many Requests') && attempts === 3 && sourceChainConfig.fallbackRpcUrl) {
+          const delay = initialDelay * Math.pow(2, attempts);
+          logger.warn(`Retry ${attempts}/${this.maxRetries} for fixFailedMessage ${messageId}: ${error.message}`);
+          if (error.message.includes('Too Many Requests') && sourceChainConfig.fallbackRpcUrl) {
             logger.info(`Switching to fallback RPC for chain ${chainId}: ${sourceChainConfig.fallbackRpcUrl}`);
-            const newProvider = new JsonRpcProvider(sourceChainConfig.fallbackRpcUrl);
-            this.providers.set(chainId, newProvider);
-            sourceWallet = new Wallet(config.privateKey, newProvider);
-            this.wallets.set(chainId, sourceWallet);
-            sourceTokenBridgeContract = new Contract(sourceChainConfig.tokenBridgeAddress, TOKEN_BRIDGE_ABI, sourceWallet);
-            this.tokenBridgeContracts.set(chainId, sourceTokenBridgeContract);
+            await this.switchToFallbackRpc(chainId);
+            return;
           }
-          if (attempts === maxAttempts) {
+          if (attempts === this.maxRetries) {
             logger.error(`Max retries reached for fixFailedMessage ${messageId}`);
             saveFailedMessage(chainId, messageId);
-            logger.info(`Queued message ${messageId} for later retry`);
             return;
           }
           await new Promise(resolve => setTimeout(resolve, delay));
         }
       }
     } catch (error: any) {
-      logger.error(`Failed to fix message ${messageId} on chain ${chainId}: ${error.message}`, {
-        revertData: error.data
-      });
+      logger.error(`Failed to fix message ${messageId} on chain ${chainId}: ${error.message}`);
       saveFailedMessage(chainId, messageId);
     }
   }
 
+  private async retryFailedMessages() {
+    const queue = fs.existsSync(queueFile) ? JSON.parse(fs.readFileSync(queueFile, 'utf-8')) : [];
+    const now = Date.now();
+    const updatedQueue = [];
+
+    for (const entry of queue) {
+      if (now - entry.timestamp < this.failedMessageTtlMs) {
+        await this.handleFailedMessage(entry.chainId, entry.messageId);
+        if (!(await this.tokenBridgeContracts.get(entry.chainId)?.isMessageFixed(entry.messageId))) {
+          updatedQueue.push(entry);
+        }
+      }
+    }
+
+    fs.writeFileSync(queueFile, JSON.stringify(updatedQueue));
+    logger.info(`Retried failed messages, ${updatedQueue.length} remain`);
+  }
+
   private async shutdown() {
     if (!this.isRunning) return;
-
     logger.info('Shutting down relayer...');
     this.isRunning = false;
 
@@ -661,7 +550,7 @@ async function main() {
   }
 }
 
-main().catch((error) => {
+main().catch(error => {
   logger.error(`Main function failed: ${error.message}`, { error: JSON.stringify(error) });
   process.exit(1);
 });
